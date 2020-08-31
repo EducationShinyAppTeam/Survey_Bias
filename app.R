@@ -663,11 +663,11 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$next1, {
-    updateTabsetPanel(session = session, "LevelB", selected = "c")
+    updateTabsetPanel(session = session, "gamelevel", selected = "c")
   })
 
   observeEvent(input$next2, {
-    updateTabsetPanel(session = session, "LevelC", selected = "d")
+    updateTabsetPanel(session = session, "gamelevel", selected = "d")
   })
 
   observeEvent(input$prev1, {
@@ -925,6 +925,8 @@ less time watching television, playing computer games, and listening to music?"
     score1 <- 0
     score2 <- 0
     score3 <- 0
+    
+    ### TODO: THIS IS BEING USED BY ALL TABS BUT ONLY CLEARS THE FIRST
   })
 
   observeEvent(input$submitB, {
@@ -1171,8 +1173,7 @@ less time watching television, playing computer games, and listening to music?"
     if (summation$summationC[input$submitC] == 40) {
       updateButton(session, "finish", disabled = FALSE)
       # values$count = values$count + 30
-    }
-    else {
+    } else {
       updateButton(session, "finish", disabled = TRUE)
     }
   })
