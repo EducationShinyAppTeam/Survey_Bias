@@ -1132,7 +1132,7 @@ less time watching television, playing computer games, and listening to music?"
     }
     
     for (i in c(input$drp13)) {
-      if (any(i == paste("haha ur wrong", bank[c(7:11), 3], "lol", sep = ""))) {
+      if (any(i == paste("\n", bank[c(7:11), 3], "\n", sep = ""))) {
         score13 <- c(score13, 0)
       } else {
         score13 <- c(score13, 0)
@@ -1140,7 +1140,7 @@ less time watching television, playing computer games, and listening to music?"
     }
     
     for (i in c(input$drp14)) {
-      if (any(i == paste("haha ur wrong", bank[c(7:11), 3], "lol", sep = "", sep = ""))) {
+      if (any(i == paste("\n", bank[c(7:11), 3], "\n", sep = "", sep = ""))) {
         score14 <- c(score14, 0)
       } else {
         score14 <- c(score14, 0)
