@@ -829,7 +829,7 @@ ui <- list(
           p(
             class = "hangingindent",
             "Carey, R. and Hatfield, N. (2020). boastUtils: BOAST
-                      Utilities. R package version 0.1.4. Available from
+                      Utilities. R package version 0.1.6.2. Available from
                       https://github.com/EducationShinyAppTeam/boastUtils"
           ),
           p(
@@ -837,29 +837,6 @@ ui <- list(
             "Chang, W. and Borges Ribeiro, B. (2018). shinydashboard:
                       Create Dashboards with 'Shiny'. R package version 0.7.1.
                       Available from https://CRAN.R-project.org/package=shinydashboard"
-          ),
-          p(
-            class = "hangingindent",
-            "Hoffer, A. (2016). shinyDND: Shiny Drag-n-Drop. R package
-                      version 0.1.0. Available from https://CRAN.R-project.org/package=shinyDND"
-          ),
-          p(
-            class = "hangingindent",
-            "Perrier, V. Meyer, F. and Granjon, D. (2020).
-                      shinyWidgets: Custom Inputs Widgets for Shiny. R package
-                      version 0.5.2. Available from https://CRAN.R-project.org/package=shinyWidgets"
-          ),
-          p(
-            class = "hangingindent",
-            "Ooms, J. (2020). V8: Embedded JavaScript and WebAssembly
-                      Engine for R. R package version 3.0.2. Available from
-                      https://CRAN.R-project.org/package=V8"
-          ),
-          p(
-            class = "hangingindent",
-            "Urbanek, S. (2013). png: Read and write PNG images.
-                      R package version 0.1-7. Available from
-                      https://CRAN.R-project.org/package=png"
           )
         )
       )
