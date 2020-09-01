@@ -9,19 +9,25 @@ library(png)
 library(shinyjs)
 library(shinyWidgets)
 library(V8)
+library(dplyr)
 
 # App Meta Data----------------------------------------------------------------
-APP_TITLE <<- "Survey bias"
+APP_TITLE <<- "Survey Question Wording Bias"
 APP_DESCP <<- paste(
-  "Description of the app",
-  "use multiple lines to keep the description legible."
+  "This app is focused on learning about common types of biased wording in",
+  "survey samples (deliberate bias; filtering; anchoring; unintentional bias;",
+  "unnecessary complexity; and asking the uninformed)."
 )
 # End App Meta Data------------------------------------------------------------
 
-# Load additional dependencies and setup functions
-# source("global.R")
-bank <- read.csv("easyQuestions.csv")
+# Load additional dependencies and setup functions ----
+bank <- read.csv("easyQuestions.csv", stringsAsFactors = FALSE, header = TRUE)
+choicesA <- c("Select Answer", "filtering", "deliberate", "anchoring")
+choicesB <- c("Select Answer", "unnecessary", "nonbias", "unintentional")
+choicesC <- c("Select Answer", "filtering", "unnecessary", "nonbias", "unintentional")
+
 jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
+
 
 # Define UI for App
 ui <- list(
@@ -31,7 +37,7 @@ ui <- list(
     skin = "red",
     ### Create the app header
     dashboardHeader(
-      title = "Survey bias",
+      title = "Survey Question Bias",
       titleWidth = 250,
       tags$li(class = "dropdown", actionLink("info", icon("info"))),
       tags$li(
@@ -47,7 +53,7 @@ ui <- list(
       sidebarMenu(
         id = "tabs",
         width = 250,
-        menuItem("Overview", tabName = "Overview", icon = icon("dashboard")),
+        menuItem("Overview", tabName = "Overview", icon = icon("tachometer-alt")),
         menuItem("Explore", tabName = "Explore", icon = icon("wpexplorer")),
         menuItem("Game", tabName = "Game", icon = icon("gamepad")),
         menuItem("References", tabName = "References", icon = icon("leanpub"))
@@ -60,25 +66,21 @@ ui <- list(
     ### Create the content
     dashboardBody(
       tabItems(
-        #### Set up the Overview Page
+        #### Set up the Overview Page ----
         tabItem(
           tabName = "Overview",
           withMathJax(),
-          h1("Survey bias for BOAST Apps"), # This should be the full name.
-          p("This app illustrate the different types of biases that occur in the
-            wording of survey questions."),
+          h1("Survey Question Wording Bias"),
+          p("The goal of this app is to illustrate the different types of biases
+            that occur in the wording of survey questions."),
           h2("Instructions"),
           p("On the first page, simply click below each question that contains a
             bias to see what that bias is."),
-          tags$ol(
-            tags$li("Pay attention! Because on the second page, you will be asked
-                    to match questions with their appropriate bias."),
-            tags$li("Note: you will be timed.  Each round will continue to increase 
-                    in difficulty."),
-            tags$li("Challenge yourself."),
-            tags$li("For the last round, please note that some of the biases overlap.
-                    So while one may seem fitting, it could be marked incorrect 
-                    if there is a more dominant bias.")
+          tags$ul(
+            tags$li("On the first page, simply click below each question that contains a bias to see what that bias is."),
+            tags$li("Pay attention! Because on the second page, you will be asked to match questions with their appropriate bias."),
+            tags$li("Note: you will be timed.  Each round will continue to increase in difficulty."),
+            tags$li("For the game portion, please note that some of the biases overlap.  So while one may seem fitting, it could be marked incorrect if there is a more dominant bias.")
           ),
           ##### Go Button--location will depend on your goals
           div(
@@ -95,477 +97,775 @@ ui <- list(
           br(),
           br(),
           h2("Acknowledgements"),
-          p(
-            "This version of the app was developed and coded by Xigang Zhang and
-            Yuxin Zhang.",
-            br(),
-            "We would like to extend a special thanks to the Shiny Program
-            Students.",
+          p("This app was initially designed and programmed by Ryan Manigly-Haney
+            with the coding updated by Yuxin Zhang (2017), and Chenese Gray with
+            input from Xigang Zhang (2020).",
             br(),
             br(),
             br(),
-            div(class = "updated", "Last Update: 7/13/2020 by NJH.")
+            div(class = "updated", "Last Update: 9/1/2020 by NJH.")
           )
         ),
-        #### Set up the Explore Page
+        #### Set up the Explore Page ----
         tabItem(
           tabName = "Explore",
           withMathJax(),
-          h2("Explore"),
-          fluidRow(
-            theme = "custom.css",
-            box(
-              title = "What's the big deal about Survey Bias?", status = "success",
-              solidHeader = TRUE, width = 7,
-
-              "Surveys help us understand public opinion on many topics.  
-          While surveys may seem easy to create, there are some common pitfalls 
-          in question wording to watch out for.  Look at the questions below to see an example of each.",
-
-
+          h2("Explore Types of Survey Wording Bias"),
+          tabsetPanel(
+            type = "tabs",
+            ### Bias Examples tab----
+            tabPanel(
+              title = "Wording Bias",
               br(),
-              br(),
-              br(),
-              strong("Deliberate Bias (one-sided wording): "), " It is hard 
-                    for today's college graduates to have a bright future 
-                with the way things are today in the world. Agree or Disagree.",
-              br(),
-              br(),
-              actionButton("runif", "Remove the bias!"),
-              br(),
-              br(),
-              tags$head(tags$style("#text_example{color: red;
-                                     font-size: 14px;
-                                     font-style: bold;
-                                     }")),
-              strong(textOutput("text_example")),
-              br(),
-              br(),
-              strong("Filtering (missing options): "), "What is your opinion 
-                      of our current President?",
-              br(), "a. Favorable", br(), "b. Unfavorable",
-              br(),
-              br(),
-              actionButton("runif1", "Remove the bias!"),
-              br(),
-              br(),
-              tags$head(tags$style("#text_example1{color: red;
-                                     font-size: 14px;
-                                     font-style: bold;
-                                     }")),
-              strong(textOutput("text_example1")),
-              br(),
-              br(),
-              strong("Anchoring : "), "Knowing that the population of the U.S.
-                            is 316 million, what is the population of Canada?",
-              br(),
-              br(),
-              actionButton("runif3", "Remove the bias!"),
-              br(),
-              br(),
-              tags$head(tags$style("#text_example3{color: red;
-                                     font-size: 14px;
-                                     font-style: bold;
-                                     }")),
-              strong(textOutput("text_example3")),
-              br(),
-              br(),
-              strong("Unintentional Bias (use of loaded words): "), "Do you 
-            favor or oppose an ordinance that ", em("forbids "), "surveillance 
-                cameras to be placed on Beaver Ave?",
-              br(),
-              br(),
-              actionButton("runif4", "Remove the bias!"),
-              br(),
-              br(),
-              tags$head(tags$style("#text_example4{color: red;
-                                     font-size: 14px;
-                                     font-style: bold;
-                                     }")),
-              strong(textOutput("text_example4")),
-              br(), br(),
-              strong("Unnecessary Complexity (double-barreled questions): "),
-              "Do you think that health care workers and military
-                personnel should be the first to receive the smallpox vaccination?",
-              br(), br(),
-              actionButton("runif5", "Remove the bias!"),
-              br(), br(),
-              tags$head(tags$style("#text_example5{color: red;
-                                     font-size: 14px;
-                                     font-style: bold;
-                                     }")),
-              strong(textOutput("text_example5")),
-              br(),
-              br(),
-              strong("Unnecessary Complexity (Double Negatives): "), "Do you 
-                disagree that obese children should not be allowed to spend a 
-            lot of time watching television, playing computer games, or listening 
-                to music?",
-              br(),
-              br(),
-              actionButton("runif6", "Remove the bias!"),
-
-              tags$head(tags$style("#text_example6{color: red;
-                                     font-size: 14px;
-                                     font-style: bold;
-                                     }")),
-              strong(textOutput("text_example6")),
-              useShinyjs(),
-              extendShinyjs(text = jsResetCode),
-              actionButton("reset_button", "Return to Overview!")
+              h3("Survey Question Wording Bias is a BIG Deal"),
+              p("Surveys help us understand public opinion on many topics. While
+                surveys may seem easy to create, there are some common pitfalls
+                in question wording to watch out for. Expand the boxes below to
+                see an example of each."),
+              ### Row 1 ----
+              fluidRow(
+                column(
+                  width = 6,
+                  box(
+                    title = "Deliberate Bias",
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    width = 12,
+                    p("People who use a form of deliberate bias (also referred to
+                      as One-sided Wording) often desire to gather support for a
+                      specific cause or opinion. Consider the bias example below
+                      then reveal the correct wording."),
+                    br(),
+                    p("Problematic Example:",
+                      br(),
+                      "It is hard for today's college graduates to have a bright
+                      future with the way things are today in the world.
+                      Agree or Disagree?"
+                    ),
+                    br(), br(),
+                    bsButton(
+                      inputId = "runif",
+                      label = "Remove the bias!",
+                      style = "default",
+                      size = "large"
+                    ),
+                    br(), br(),
+                    p(
+                      class = "answertext",
+                      tags$strong(textOutput("text_example", inline = TRUE))
+                    )
+                  )
+                ),
+                column(
+                  width = 6,
+                  box(
+                    title = "Filtering",
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    width = 12,
+                    p("Filtering (or Missing Options) exists when certain choices
+                      such as 'undecided' or 'don't know' are not included in the
+                      list of possible answers. Consider the bias example below
+                      then reveal the correct wording."),
+                    br(),
+                    p("Problematic Example:",
+                      br(),
+                      "What is your opinion of our current President?",
+                      br(),
+                      "a. Favorable",
+                      br(),
+                      "b. Unfavorable"
+                    ),
+                    br(), br(),
+                    bsButton(
+                      inputId = "runif1",
+                      label = "Remove the bias!",
+                      style = "default",
+                      size = "large"
+                    ),
+                    br(), br(),
+                    p(
+                      class = "answertext",
+                      tags$strong(textOutput("text_example1", inline = TRUE))
+                    )
+                  )
+                )
+              ),
+              ### Row 2 ----
+              fluidRow(
+                column(
+                  width = 6,
+                  box(
+                    title = "Anchoring",
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    width = 12,
+                    p("Anchoring is when questions include a reference point or
+                      anchor. People tend to say close to the anchor because of
+                      either having limited knowledge about the topic or being
+                      distracted by the anchor. Consider the bias example below
+                      then reveal the correct wording."),
+                    br(),
+                    p("Problematic Example:",
+                      br(),
+                      "Knowing that the population of the U.S. is 316 million,
+                      what is the population of Canada?"
+                    ),
+                    br(), br(),
+                    bsButton(
+                      inputId = "runif3",
+                      label = "Remove the bias!",
+                      style = "default",
+                      size = "large"
+                    ),
+                    br(), br(),
+                    p(
+                      class = "answertext",
+                      tags$strong(textOutput("text_example3", inline = TRUE))
+                    )
+                  )
+                ),
+                column(
+                  width = 6,
+                  box(
+                    title = "Unintential Bias",
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    width = 12,
+                    p("Unintentional bias or 'The Use of Loaded Words' is when a
+                      question contains words such as 'forbid', 'control', 'ban',
+                      'outlaw', and 'restraint'. People do not like to be told
+                      that they can't do something so they tend to answer 'oppose'
+                      or 'no', regardless of what question is actually being asked.
+                      Consider the bias example below then reveal the correct
+                      wording."),
+                    br(),
+                    p("Problematic Example:",
+                      br(),
+                      "Do you favor or oppose an ordinance that ",
+                      tags$em("forbids"),
+                      " surveillance cameras to be placed on Beaver Ave?",
+                    ),
+                    br(), br(),
+                    bsButton(
+                      inputId = "runif4",
+                      label = "Remove the bias!",
+                      style = "default",
+                      size = "large"
+                    ),
+                    br(), br(),
+                    p(
+                      class = "answertext",
+                      tags$strong(textOutput("text_example4", inline = TRUE))
+                    )
+                  )
+                )
+              ),
+              ### Row 3 ----
+              fluidRow(
+                column(
+                  width = 6,
+                  box(
+                    title = "Unnecessarily Complex: Double-barreled",
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    width = 12,
+                    p("A question is unnecessarily complex is composed of two or
+                      more separate issues or topics, but which can only have one
+                      answer. We call this type of complex question a
+                      Double-barreled Question. Consider the bias example below
+                      then reveal the correct wording."),
+                    br(),
+                    p("Problematic Example:",
+                      br(),
+                      "Do you think that health care workers and military personnel
+                      should be the first to receive the COVID-19 vaccination?"
+                    ),
+                    br(), br(),
+                    bsButton(
+                      inputId = "runif5",
+                      label = "Remove the bias!",
+                      style = "default",
+                      size = "large"
+                    ),
+                    br(), br(),
+                    p(
+                      class = "answertext",
+                      tags$strong(textOutput("text_example5", inline = TRUE))
+                    )
+                  )
+                ),
+                column(
+                  width = 6,
+                  box(
+                    title = "Unnecessarily Complex: Double Negatives",
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    width = 12,
+                    p("Another way in which questions can be unnecessarily complex
+                      is through the use of double negatives. Double negative bias
+                      occurs when two negative words are used in one sentence.
+                      Many respondents will not understand what the question is
+                      really asking. Consider the bias example below then reveal
+                      the correct wording."),
+                    br(),
+                    p("Problematic Example:",
+                      br(),
+                      "Do you disagree that obese children should not be allowed
+                      to spend a lot of time watching television, playing computer
+                      games, or listening to music?",
+                    ),
+                    br(), br(),
+                    bsButton(
+                      inputId = "runif6",
+                      label = "Remove the bias!",
+                      style = "default",
+                      size = "large"
+                    ),
+                    br(), br(),
+                    p(
+                      class = "answertext",
+                      tags$strong(textOutput("text_example6", inline = TRUE))
+                    )
+                  )
+                )
+              )
             ),
-
-            box(
-              title = "Did you Know...", status = "warning", solidHeader = TRUE,
-              width = 5,
-              img(src = "truman.png", align = "right"),
-              " For the 1948 election between Thomas Dewey and Harry Truman, 
-                Gallup conducted a poll with a sample size of about 3250. Each 
-                individual in the sample was interviewed in person by a professional 
-                interviewer to minimize nonresponse bias, and each interviewer was 
-                given a very detailed set of quotas to meet (rather than being 
-                given a random sample of specific people to contact).",
+            ## Did you know tab ----
+            tabPanel(
+              title = "Did you know...",
               br(),
-              br(),
-              "For example, an interviewer could have been given 
-                the following quotas: seven white males under 40 living in a 
-                rural area, five black males under 40 living in an rurban area, 
-                six black females under 40 living in a rural area, etc. Other 
-                than meeting these quotas the ultimate choice of who was 
-                interviewed was left to each interviewer.",
-              br(),
-              br(),
-              "Based on the results of this poll, Gallup predicted 
-                a victory for Dewey, the Republican candidate. 
-                The predicted breakdown of the vote was 50% for Dewey, 44% for 
-                Truman, and 6% for third-party candidates Strom Thurmond and 
-                Henry Wallace. The actual results of the election turned out to 
-                be almost exactly reversed:50% for Truman, 45% for Dewey, 
-                and 5% for third-party candidates.",
-              br(),
-              br(),
-              "Truman's victory was a great surprise to the nation 
-                      as a whole. So convinced was the Chicago Tribune of Dewey's 
-                victory that it went to press on its early edition for November 4, 
-                1948 with the headline",
-              strong("Dewey defeats Truman"),
-              br(),
-              br(),
-              "The Gallup Poll learned the lesson that the biases of 
-        quota based polling can be alleviated by using random sampling techniques. 
-       Check out", a("their site", href = "http://www.gallup.com"), " to see more!"
+              img(src = 'truman.png',
+                  align = "right",
+                  height = '50%',
+                  width = '50%',
+                  alt = "Truman holds paper with headline he lost when he won"
+              ),
+              p("For the 1948 election between Thomas Dewey and Harry Truman,
+                Gallup conducted a poll with a sample size of about 3250. Each
+                individual in the sample was interviewed in person by a
+                professional interviewer to minimize nonresponse bias, and each
+                interviewer was given a very detailed set of quotas to meet
+                (rather than being given a random sample of specific people to
+                contact)."
+              ),
+              p("For example, an interviewer could have been given the following
+                quotas: seven white males under 40 living in a rural area, five
+                black males under 40 living in an rurban area, six black females
+                under 40 living in a rural area, etc. Other than meeting these
+                quotas the ultimate choice of who was interviewed was left to
+                each interviewer."
+              ),
+              p("Based on the results of this poll, Gallup predicted a victory
+                for Dewey, the Republican candidate. The predicted breakdown of
+                the vote was 50% for Dewey, 44% for Truman, and 6% for third-party
+                candidates Strom Thurmond and Henry Wallace. The actual results
+                of the election turned out to be almost exactly reversed: 50% for
+                Truman, 45% for Dewey, and 5% for third-party candidates."
+              ),
+              p("Truman's victory was a great surprise to the nation as a whole.
+                So convinced was the Chicago Tribune of Dewey's victory that it
+                went to press on its early edition for November 4, 1948 with the
+                headline", strong("Dewey defeats Truman.")
+              ),
+              p("The Gallup Poll learned the lesson that the biases of quota
+                based polling can be alleviated by using random sampling
+                techniques. Check out ",
+                tags$a(href = "http://www.gallup.com", "the Gallup Website"),
+                " to learn more."
+              )
+            )
+          ),
+          useShinyjs(),
+          extendShinyjs(text = jsResetCode),
+          fluidRow(
+            column(
+              width = 3,
+              offset = 2,
+              bsButton(
+                inputId = "reset_button",
+                label = "Return to Overview",
+                style = "default",
+                size = "large"
+              )
+            ),
+            column(
+              width = 3,
+              offset = 2,
+              bsButton(
+                inputId = "playGame",
+                label = "Play Wording Bias Game",
+                style = "default",
+                size = "large"
+              )
             )
           )
         ),
-
-        #### Set up an Game Page
+        #### Set up an Game Page ----
         tabItem(
           tabName = "Game",
           withMathJax(),
+          useShinyjs(),
           h2("Survey Bias Game"),
-          fluidRow(
-            theme = "bootstrap.css",
-            tabsetPanel(
-              id = "gamelevel",
-              tabPanel(
-                title = "Directions", value = "a",
-                "This is a three level game to test if you 
-                         can recognize the types of biases described in this app. 
-                         Each level will consist of 4 questions that contain a bias.  
-                         Match the question with the bias that it contains.  
-                         As the levels get harder, some questions will contain 
-                                       multiple biases.  Only choose one!",
-                br(),
-                br(),
-                "There is a timer that will start as soon as you begin the game.  
-         For each question you get wrong, you will be deducted 2 points and each 
-         question you get right, you will be awarded 2 points.  In order to move 
-         from easy to medium to hard, you will need to fully finish each level.  
-       At the end of the second round, the timer will stop after all answers are 
-     submitted correctly.  Your score will be compiled and if it is a top score, 
-        it will make the leader board.",
-                br(),
-                br(),
-                h2("Ready?"),
-                fluidRow(column(1,
-                  offset = 5,
-                  bsButton(inputId = "go2", label = "G O !", style = "danger", size = "large")
-                ))
-              ),
-
-              ######## Level Easy
-              tabPanel("Level A",
-                value = "b",
-                fluidPage(
-                  theme = "bootstrap.css", # css theme
-                  tags$style(type = "text/css", "#timer1 {background-color:#2C3E50; font-size: 20px; 
- color:white;font-weight: bold;font family:Sans-serif;text-align: center; border-radius: 100px}"),
-                  # link to your own css file
-                  titlePanel("Select approaite Bias to each question. "),
-                  fluidRow(column(3, offset = 9, textOutput("timer1"))), br(),
-                  conditionalPanel(
-                    "input.go != 0", # Show everything only after the GO button is clicked
-                    # Set up all dropdownUIs which are randomly chosen from the question bank
-
-                    h3("Choose the bias for the following: "),
-                    uiOutput("filteringName1"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "first", label = "Bias Type", c(
-                          "Select Answer", "filtering",
-                          "deliberate", "anchoring"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer2"))
-                    ),
-                    uiOutput("deliberateName1"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "second", label = "Bias Type", c(
-                          "Select Answer", "filtering",
-                          "deliberate", "anchoring"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer3"))
-                    ),
-
-                    uiOutput("anchoringName1"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "third", label = "Bias Type", c(
-                          "Select Answer", "filtering",
-                          "deliberate", "anchoring"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer4"))
-                    ),
-                    hr(),
-                    # Submit button and pagination button
-                    fluidRow(
-                      column(1, bsButton("prev2", "<<Previous", style = "danger", size = "small")),
-                      column(1, offset = 4, conditionalPanel(
-                        "(input.filtering!='') & (input.anchoring!='') 
-                                        & (input.deliberate!='')",
-                        bsButton("submitA", "Submit Answer", style = "danger", size = "small", class = "grow")
-                      )),
-                      column(1, offset = 5, bsButton("next1", "Next>>", style = "danger", size = "small", disabled = TRUE))
-                    ),
-                    br(),
-                    conditionalPanel("input.submitA != 0", wellPanel(
-                      fluidPage(
-                        fluidRow(
-                          div(style = "position:absolute; top:8em; right:2em", bsButton("Reset", "Reset", style = "danger")),
-                          class = "wellTransparent col-lg-8"
-                        ),
-                        wellPanel(h4("Full score is 30 for Easy Level."),
-                          verbatimTextOutput("scoreA"),
-                          class = "wellTransparent col-lg-4"
-                        )
-                      )
-                    ))
-                  )
-                )
-              ),
-              tabPanel("LevelB",
-                value = "c",
-                fluidPage(
-                  theme = "bootstrap.css", # css theme
-                  tags$style(type = "text/css", "#timer2 {background-color:#2C3E50; font-size: 20px; 
-   color:white;font-weight: bold;font family:Sans-serif;text-align: center; border-radius: 100px}"),
-                  # link to your own css file
-                  titlePanel("Select approaite Bias to each question. "),
-                  fluidRow(column(3, offset = 9, textOutput("timer2"))), br(),
-
-                  conditionalPanel(
-                    "input.next1 != 0", # Show everything only after the next button is clicked
-                    # Set up all dragUIs which are randomly chosen from the question bank
-                    h3("Choose the bias for the following: "),
-                    uiOutput("unnecessaryName1"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "forth", label = "Bias Type", c(
-                          "Select Answer", "unnecessary",
-                          "nonbias", "unintentional"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer6"))
-                    ),
-
-                    uiOutput("nonbiasName1"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "fifth", label = "Bias Type", c(
-                          "Select Answer", "unnecessary",
-                          "nonbias", "unintentional"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer7"))
-                    ),
-                    uiOutput("unintentionalName2"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "sixth", label = "Bias Type", c(
-                          "Select Answer", "unnecessary",
-                          "nonbias", "unintentional"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer8"))
-                    ),
-                    hr(),
-                    # Submit button and pagination button
-                    fluidRow(
-                      column(1, bsButton("prev1", "<<Previous", style = "primary", size = "small")),
-                      column(1, offset = 4, conditionalPanel(
-                        "(input.unnecessary!='') & (input.nonbias!='') & (input.unintentional!='')",
-                        bsButton("submitB", "Submit Answer", style = "primary", size = "small", class = "grow")
-                      )),
-                      column(1, offset = 5, bsButton("next2", "Next>>", style = "primary", size = "small", disabled = TRUE))
-                    ),
-                    br(),
-                    conditionalPanel("input.submitB != 0", wellPanel(
-                      fluidPage(
-                        fluidRow(
-                          div(style = "position:absolute; top:8em; right:2em", bsButton("Reset", "Reset", style = "danger")),
-                          class = "wellTransparent col-lg-8"
-                        ),
-                        wellPanel(h4("Full score is 30 for Medium Level."),
-                          verbatimTextOutput("scoreB"),
-                          class = "wellTransparent col-lg-4"
-                        )
-                      )
-                    ))
-                  )
-                )
-              ),
-              tabPanel("LevelC",
-                value = "d",
-                fluidPage(
-                  theme = "bootstrap.css", # css theme
-                  tags$style(type = "text/css", "#timer3 {background-color:#2C3E50; font-size: 20px; 
-  color:white;font-weight: bold;font family:Sans-serif;text-align: center; border-radius: 100px}"), # link to your own css file
-                  titlePanel("Select approaite Bias to each question. "),
-                  fluidRow(column(3, offset = 9, textOutput("timer3"))), br(),
-
-                  conditionalPanel(
-                    "input.next2 != 0", # Show everything only after the GO button is clicked
-                    # Set up all dragUIs which are randomly chosen from the question bank
-                    h3("Choose the bias for the following: "),
-                    uiOutput("unintentionalName1"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "seventh", label = "Bias Type", c(
-                          "Select Answer", "filtering",
-                          "unnecessary", "nonbias", "unintentional"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer9"))
-                    ),
-
-                    uiOutput("unnecessaryName2"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "eighth", label = "Bias Type", c(
-                          "Select Answer", "filtering",
-                          "unnecessary", "nonbias", "unintentional"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer11"))
-                    ),
-
-                    uiOutput("filteringName2"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "ninth", label = "Bias Type", c(
-                          "Select Answer", "filtering",
-                          "unnecessary", "nonbias", "unintentional"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer10"))
-                    ),
-
-                    uiOutput("nonbiasNAME2"),
-                    fluidRow(
-                      column(
-                        width = 9,
-                        selectInput(inputId = "tenth", label = "Bias Type", c(
-                          "Select Answer", "filtering",
-                          "unnecessary", "nonbias", "unintentional"
-                        ), width = "30%")
-                      ),
-                      column(width = 2, offset = 1, uiOutput("answer12"))
-                    ),
-                    hr(),
-                    # Submit button and pagination button
-                    fluidRow(
-                      column(1, bsButton("prev3", "<<Previous", style = "primary", size = "small")),
-                      column(1, offset = 4, conditionalPanel(
-                        "(input.unintentional!='') & (input.unnecessary!='') & (input.filtering!='') & (input.nonbias!='')",
-                        bsButton("submitC", "Submit Answer", style = "primary", size = "small", class = "grow")
-                      ))
-                    ),
-                    br(),
-                    conditionalPanel("input.submitB != 0", wellPanel(
-                      fluidPage(
-                        fluidRow(
-                          div(style = "position:absolute; top:8em; right:2em", bsButton("Reset", "Reset", style = "danger")),
-                          class = "wellTransparent col-lg-8"
-                        ),
-                        column(1, offset = 5, bsButton("finish", "STOP>>", style = "danger", disabled = TRUE, size = "small")),
-                        wellPanel(h4("Full score is 40 for Hard Level."),
-                          verbatimTextOutput("scoreC"),
-                          class = "wellTransparent col-lg-4"
-                        )
-                      )
-                    ))
-                  )
-                )
-              ),
-              #### Set up the References Page-REQUIRED
-              tabItem(
-                tabName = "References",
-                withMathJax(),
-                h2("References"),
-                p(
-                  class = "hangingindent",
-                  "Bailey, E. (2015). shinyBS: Twitter bootstrap components for shiny.
-            (v0.61). [R package]. Available from
-            https://CRAN.R-project.org/package=shinyBS"
-                ),
-                p(
-                  class = "hangingindent",
-                  "Carey, R. (2019). boastUtils: BOAST Utilities. (v0.1.0).
-            [R Package]. Available from
-            https://github.com/EducationShinyAppTeam/boastUtils"
-                ),
-                p(
-                  class = "hangingindent",
-                  "Chang, W. and Borges Ribeio, B. (2018). shinydashboard: Create
-            dashboards with 'Shiny'. (v0.7.1) [R Package]. Available from
-            https://CRAN.R-project.org/package=shinydashboard"
-                ),
-                p(
-                  class = "hangingindent",
-                  "Chang, W., Cheng, J., Allaire, J., Xie, Y., and McPherson, J.
-            (2019). shiny: Web application framework for R. (v1.4.0)
-            [R Package]. Available from https://CRAN.R-project.org/package=shiny"
-                ),
-                p(
-                  class = "hangingindent",
-                  "Wickham, W. (2016). ggplot2: Elegant graphics for data analysis.
-            [R Package]. Springer-Verlag New York. Available from
-            https://ggplot2.tidyverse.org"
+          tabsetPanel(
+            id = "gameLevels",
+            type = "hidden",
+            ## Directions Tab ----
+            tabPanel(
+              title = "Directions",
+              p("This is a three level game to test if you can recognize the
+                types of biases described in this app. Each level will consist of
+                4 questions that contain a bias. Match the question with the bias
+                that it contains. As the levels get harder, some questions will
+                contain multiple biases; in these cases you should select the most
+                prevelant bias."),
+              p("There is a timer that will start as soon as you begin the game.
+                For each question you get wrong, you will be deducted 2 points
+                and each question you get right, you will be awarded 2 points.
+                In order to move from level to level, you will need to fully
+                finish each level. At the end of the second round, the timer
+                will stop after all answers are submitted correctly."),
+              p("Are you ready? If so, press Start!"),
+              div(
+                style = "text-align: center",
+                bsButton(
+                  inputId = "go2",
+                  label = "Start!",
+                  style = "default",
+                  size = "large",
+                  icon = icon("bolt")
                 )
               )
+            ),
+            ## Level A ----
+            tabPanel(
+              title = "Level A",
+              div(
+                style = "text-align: right",
+                textOutput("timerA")
+              ),
+              h3("Level A"),
+              p("Select the appropriate bias for each survey question."),
+              h4("Survey Question 1"),
+              uiOutput("questionA1"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qA1",
+                    label = "Bias Type",
+                    choices = choicesA
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansA1")
+                )
+              ),
+              h4("Survey Question 2"),
+              uiOutput("questionA2"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qA2",
+                    label = "Bias Type",
+                    choices = choicesA
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansA2")
+                )
+              ),
+              h4("Survey Question 3"),
+              uiOutput("questionA3"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qA3",
+                    label = "Bias Type",
+                    choices = choicesA
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansA3")
+                )
+              ),
+              hr(),
+              fluidRow(
+                column(
+                  width = 2,
+                  bsButton(
+                    inputId = "prevA",
+                    label = "Previous",
+                    style = "default",
+                    size = "large"
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 3,
+                  div(
+                    style = "text-align: center;",
+                    bsButton(
+                      inputId = "submitA",
+                      label = "Submit",
+                      style = "default",
+                      size = "large"
+                    )
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 3,
+                  bsButton(
+                    inputId = "nextA",
+                    label = "Next",
+                    style = "default",
+                    size = "large",
+                    disabled = TRUE
+                  )
+                )
+              ),
+              div(
+                style = "text-align: center;",
+                bsButton(
+                  inputId = "reattemptA",
+                  label = "Reattempt",
+                  style = "default",
+                  size = "large",
+                  icon = icon("retweet"),
+                  disabled = TRUE
+                )
+              ),
+              br(),
+              br(),
+              tags$strong(textOutput("scoreA")),
+              p("The maximum possible score for this level is 6 points.")
+            ),
+            ## Level B ----
+            tabPanel(
+              title = "Level B",
+              div(
+                style = "text-align: right",
+                textOutput("timerB")
+              ),
+              h3("Level B"),
+              p("Select the appropriate bias for each survey question."),
+              h4("Survey Question 1"),
+              uiOutput("questionB1"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qB1",
+                    label = "Bias Type",
+                    choices = choicesB
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansB1")
+                )
+              ),
+              h4("Survey Question 2"),
+              uiOutput("questionB2"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qB2",
+                    label = "Bias Type",
+                    choices = choicesB
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansB2")
+                )
+              ),
+              h4("Survey Question 3"),
+              uiOutput("questionB3"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qB3",
+                    label = "Bias Type",
+                    choices = choicesB
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansB3")
+                )
+              ),
+              hr(),
+              fluidRow(
+                column(
+                  width = 2,
+                  bsButton(
+                    inputId = "prevB",
+                    label = "Previous",
+                    style = "default",
+                    size = "large"
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 3,
+                  div(
+                    style = "text-align: center;",
+                    bsButton(
+                      inputId = "submitB",
+                      label = "Submit",
+                      style = "default",
+                      size = "large"
+                    )
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 3,
+                  bsButton(
+                    inputId = "nextB",
+                    label = "Next",
+                    style = "default",
+                    size = "large",
+                    disabled = TRUE
+                  )
+                )
+              ),
+              div(
+                style = "text-align: center;",
+                bsButton(
+                  inputId = "reattemptB",
+                  label = "Reattempt",
+                  style = "default",
+                  size = "large",
+                  icon = icon("retweet"),
+                  disabled = TRUE
+                )
+              ),
+              br(),
+              br(),
+              tags$strong(textOutput("scoreB")),
+              p("The maximum possible score for this level is 6 points.")
+            ),
+            ## Level C ----
+            tabPanel(
+              title = "Level C",
+              div(
+                style = "text-align: right",
+                textOutput("timerC")
+              ),
+              h3("Level C"),
+              p("Select the appropriate bias for each survey question."),
+              h4("Survey Question 1"),
+              uiOutput("questionC1"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qC1",
+                    label = "Bias Type",
+                    choices = choicesC
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansC1")
+                )
+              ),
+              h4("Survey Question 2"),
+              uiOutput("questionC2"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qC2",
+                    label = "Bias Type",
+                    choices = choicesC
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansC2")
+                )
+              ),
+              h4("Survey Question 3"),
+              uiOutput("questionC3"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qC3",
+                    label = "Bias Type",
+                    choices = choicesC
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansC3")
+                )
+              ),
+              h4("Survey Question 4"),
+              uiOutput("questionC4"),
+              fluidRow(
+                column(
+                  width = 3,
+                  selectInput(
+                    inputId = "qC4",
+                    label = "Bias Type",
+                    choices = choicesC
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 0,
+                  uiOutput("ansC4")
+                )
+              ),
+              hr(),
+              fluidRow(
+                column(
+                  width = 2,
+                  bsButton(
+                    inputId = "prevC",
+                    label = "Previous",
+                    style = "default",
+                    size = "large"
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 3,
+                  div(
+                    style = "text-align: center;",
+                    bsButton(
+                      inputId = "submitC",
+                      label = "Submit",
+                      style = "default",
+                      size = "large"
+                    )
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 3,
+                  bsButton(
+                    inputId = "nextC",
+                    label = "Next",
+                    style = "default",
+                    size = "large",
+                    disabled = TRUE
+                  )
+                )
+              ),
+              div(
+                style = "text-align: center;",
+                bsButton(
+                  inputId = "reattemptC",
+                  label = "Reattempt",
+                  style = "default",
+                  size = "large",
+                  icon = icon("retweet"),
+                  disabled = TRUE
+                )
+              ),
+              br(),
+              br(),
+              tags$strong(textOutput("scoreC")),
+              p("The maximum possible score for this level is 8 points.")
+            ),
+            ## Final Page ----
+            tabPanel(
+              title = "Final Scores",
+              h3("Final Scores"),
+              p("Congratulations on finishing the game."),
+              br(),
+              textOutput("finalAScore"),
+              textOutput("finalBScore"),
+              textOutput("finalCScore"),
+              hr(),
+              textOutput("totalScore"),
+              textOutput("finalTime"),
+              ## Reset button isn't working due to students' code
+              # div(
+              #   style = "text-align: center;",
+              #   bsButton(
+              #     inputId = "restart",
+              #     label = "Play Again",
+              #     style = "default",
+              #     size = "large"
+              #   )
+              # )
             )
+          )
+        ),
+        #### Set up the References Page----
+        tabItem(
+          tabName = "References",
+          withMathJax(),
+          h2("References"),
+          p(
+            class = "hangingindent",
+            "Attali, D. (2020). shinyjs: Easily Improve the User
+                      Experience of Your Shiny Apps in Seconds. R package
+                      version 1.1. Available from https://CRAN.R-project.org/package=shinyjs"
+          ),
+          p(
+            class = "hangingindent",
+            "Bailey, E. (2015). shinyBS: Twitter Bootstrap Components
+                      for Shiny. R package version 0.61. Available from
+                      https://CRAN.R-project.org/package=shinyBS"
+          ),
+          p(
+            class = "hangingindent",
+            "Carey, R. and Hatfield, N. (2020). boastUtils: BOAST
+                      Utilities. R package version 0.1.4. Available from
+                      https://github.com/EducationShinyAppTeam/boastUtils"
+          ),
+          p(
+            class = "hangingindent",
+            "Chang, W. and Borges Ribeiro, B. (2018). shinydashboard:
+                      Create Dashboards with 'Shiny'. R package version 0.7.1.
+                      Available from https://CRAN.R-project.org/package=shinydashboard"
+          ),
+          p(
+            class = "hangingindent",
+            "Hoffer, A. (2016). shinyDND: Shiny Drag-n-Drop. R package
+                      version 0.1.0. Available from https://CRAN.R-project.org/package=shinyDND"
+          ),
+          p(
+            class = "hangingindent",
+            "Perrier, V. Meyer, F. and Granjon, D. (2020).
+                      shinyWidgets: Custom Inputs Widgets for Shiny. R package
+                      version 0.5.2. Available from https://CRAN.R-project.org/package=shinyWidgets"
+          ),
+          p(
+            class = "hangingindent",
+            "Ooms, J. (2020). V8: Embedded JavaScript and WebAssembly
+                      Engine for R. R package version 3.0.2. Available from
+                      https://CRAN.R-project.org/package=V8"
+          ),
+          p(
+            class = "hangingindent",
+            "Urbanek, S. (2013). png: Read and write PNG images.
+                      R package version 0.1-7. Available from
+                      https://CRAN.R-project.org/package=png"
           )
         )
       )
@@ -573,11 +873,14 @@ ui <- list(
   )
 )
 
-# Define server logic
-bank <- data.frame(lapply(bank, as.character), stringsAsFactors = FALSE)
 
+# Define server logic ----
 server <- function(input, output, session) {
-  
+
+  scoreLevelA <- reactiveVal(0)
+  scoreLevelB <- reactiveVal(0)
+  scoreLevelC <- reactiveVal(0)
+
   ## Define what each button does
   observeEvent(input$info, {
     sendSweetAlert(
@@ -596,103 +899,151 @@ server <- function(input, output, session) {
       type = "info"
     )
   })
-  
-  # Reset Button For Main Page
+
+  # Reset Button For Main Page ----
   observeEvent(input$reset_button, {
     js$reset()
   })
 
-  ### go button
+  ### go button ----
   observeEvent(input$go1, {
-    updateTabItems(session, "tabs", "Explore")
+    updateTabItems(
+      session = session,
+      inputId = "tabs",
+      selected = "Explore"
+    )
   })
 
-  ######## Timer Info
-  time <- reactiveValues(inc = 0, timer = reactiveTimer(1000), started = FALSE)
+  ### Play button ----
+  observeEvent(input$playGame, {
+    updateTabItems(
+      session = session,
+      inputId = "tabs",
+      selected = "Game"
+    )
+  })
 
+  ## Timer Info ----
+  time <- reactiveValues(inc = 0, timer = reactiveTimer(1000), started = FALSE)
   observe({
     time$timer()
     if (isolate(time$started)) {
       time$inc <- isolate(time$inc) + 1
     }
   })
-
   observeEvent(input$go2, {
     time$started <- TRUE
   })
-  
-  observeEvent(input$submitA, {
-    time$started <- FALSE
-  })
-  
-  observeEvent(input$next1, {
+  observeEvent(input$nextA, {
     time$started <- TRUE
   })
-  
-  observeEvent(input$submitB, {
-    time$started <- FALSE
-  })
-  
-  observeEvent(input$submitC, {
-    time$timer <- reactiveTimer(Inf)
+  observeEvent(input$nextB, {
+    time$started <- TRUE
   })
 
-  output$timer1 <- renderPrint({
-    cat("you have used:", time$inc, "secs")
+  ## Timer Outputs ----
+  output$timerA <- renderText({
+    paste("You have used", time$inc, "seconds.")
   })
-  
-  output$timer2 <- renderPrint({
-    cat("you have used:", time$inc, "secs")
+  output$timerB <- renderText({
+    paste("You have used", time$inc, "seconds.")
   })
-  
-  output$timer3 <- renderPrint({
-    cat("you have used:", time$inc, "secs")
+  output$timerC <- renderText({
+    paste("You have used", time$inc, "seconds.")
   })
-  
-  output$timer4 <- renderPrint({
-    cat("you have used:", time$inc, "secs")
-  })
-  
-  output$timer5 <- renderPrint({
-    cat("you have used:", time$inc, "secs")
+  output$finalTime <- renderText({
+    paste("You used a total of ", time$inc, "seconds.")
   })
 
-  ###### Back and Forth Buttons
+  ###### Back and Forth Buttons ----
   observeEvent(input$go2, {
-    updateTabsetPanel(session = session, "gamelevel", selected = "b")
+    updateTabsetPanel(
+      session = session,
+      inputId = "gameLevels",
+      selected = "Level A")
   })
 
-  observeEvent(input$next1, {
-    updateTabsetPanel(session = session, "gamelevel", selected = "c")
+  observeEvent(input$nextA, {
+    if(scoreLevelA() == 6) {
+      updateTabsetPanel(
+        session = session,
+        inputId = "gameLevels",
+        selected = "Level B")
+    } else {
+      sendSweetAlert(
+        session = session,
+        title = "Try Again",
+        text = "You need to achieve the max score before moving on.",
+        type = "warning"
+      )
+    }
   })
 
-  observeEvent(input$next2, {
-    updateTabsetPanel(session = session, "gamelevel", selected = "d")
+  observeEvent(input$nextB, {
+    if(scoreLevelB() == 6) {
+      updateTabsetPanel(
+        session = session,
+        inputId = "gameLevels",
+        selected = "Level C")
+    } else {
+      sendSweetAlert(
+        session = session,
+        title = "Try Again",
+        text = "You need to achieve the max score before moving on.",
+        type = "warning"
+      )
+    }
   })
 
-  observeEvent(input$prev1, {
-    updateTabsetPanel(session = session, "tabMain", selected = "b")
+  observeEvent(input$nextC, {
+    if(scoreLevelC() == 8) {
+      updateTabsetPanel(
+        session = session,
+        inputId = "gameLevels",
+        selected = "Final Scores"
+      )
+    } else {
+      sendSweetAlert(
+        session = session,
+        title = "Try Again",
+        text = "You need to achieve the max score before moving on.",
+        type = "warning"
+      )
+    }
   })
 
-  observeEvent(input$prev2, {
-    updateTabsetPanel(session = session, "tabMain", selected = "a")
+  observeEvent(input$prevA, {
+    updateTabsetPanel(
+      session = session,
+      inputId = "gameLevels",
+      selected = "Directions")
   })
 
-  observeEvent(input$prev3, {
-    updateTabsetPanel(session = session, "tabMain", selected = "c")
+  observeEvent(input$prevB, {
+    updateTabsetPanel(
+      session = session,
+      inputId = "gameLevels",
+      selected = "Level A")
   })
 
-  # Main Page
+  observeEvent(input$prevC, {
+    updateTabsetPanel(
+      session = session,
+      inputId = "gameLevels",
+      selected = "Level B")
+  })
+
+  # Exploration Page ----
   observeEvent(input$runif, {
     output$text_example <- renderText({
-      "Do you agree or disagree that it is hard 
+      "Do you agree or disagree that it is hard
       for today's college graduates to have a bright future?"
     })
   })
 
   observeEvent(input$runif1, {
     output$text_example1 <- renderText({
-      "What is your opinion of our current President? 
+      "What is your opinion of our current President?
       a. favorable b. unfavorable c. undecided"
     })
   })
@@ -722,475 +1073,400 @@ server <- function(input, output, session) {
 
   observeEvent(input$runif4, {
     output$text_example4 <- renderText({
-      "Do you favor or oppose an ordinance that does not allow 
+      "Do you favor or oppose an ordinance that does not allow
       surveillance cameras to be placed on Beaver Avenue?"
     })
   })
 
   observeEvent(input$runif5, {
     output$text_example5 <- renderText({
-      "Who should have priority in receiving the smallpox vaccination? 
-      a. health care workers 
+      "Who should have priority in receiving the smallpox vaccination?
+      a. health care workers
       b. military personnel
-      c. both health care workers and military personnel 
+      c. both health care workers and military personnel
       d. neither"
     })
   })
-  
+
   observeEvent(input$runif6, {
     output$text_example6 <- renderText({
-      "Do you agree or disagree that children who 
-      have a Body Mass Index (BMI) at or above the 95th percentile should spend 
+      "Do you agree or disagree that children who
+      have a Body Mass Index (BMI) at or above the 95th percentile should spend
 less time watching television, playing computer games, and listening to music?"
     })
   })
 
-  # Judge Correctness
-  numbers <- reactiveValues(dis = c())
+  ## Game Server Logic ----
+
+  ### Level A Scoring/Submit Button ----
+  observeEvent(input$submitA, {
+    #### Stop Timer ----
+    time$started <- FALSE
+    #### QA1 ----
+    if (!is.null(input$qA1)) {
+      if (input$qA1 == questionBank[1, "Type"]) {
+        scoreLevelA(scoreLevelA() + 2)
+        output$ansA1 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelA(scoreLevelA() - 2)
+        output$ansA1 <- renderUI({
+          img(src = "cross.png", width = 50)
+        })
+      }
+    }
+    #### QA2 ----
+    if (!is.null(input$qA2)) {
+      if (input$qA2 == questionBank[2, "Type"]) {
+        scoreLevelA(scoreLevelA() + 2)
+        output$ansA2 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelA(scoreLevelA() - 2)
+        output$ansA2 <- renderUI({
+          img(src = "cross.PNG", width = 50)
+        })
+      }
+    }
+    #### QA3 ----
+    if (!is.null(input$qA3)) {
+      if (input$qA3 == questionBank[3, "Type"]) {
+        scoreLevelA(scoreLevelA() + 2)
+        output$ansA3 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelA(scoreLevelA() - 2)
+        output$ansA3 <- renderUI({
+          img(src = "cross.PNG", width = 50)
+        })
+      }
+    }
+    #### Disable Submit Button ----
+    updateButton(
+      session = session,
+      inputId = "submitA",
+      disabled = TRUE
+    )
+    #### Enable Next button ----
+    if(!is.null(scoreLevelA()) ){
+      updateButton(
+        session = session,
+        inputId = "nextA",
+        disabled = FALSE
+      )
+    }
+
+    #### Enable Reattempt Button ----
+    if(scoreLevelA() < 6){
+      updateButton(
+        session = session,
+        inputId = "reattemptA",
+        disabled = FALSE
+      )
+    }
+  })
+
+  ### Level B Scoring/Submit Button ----
+  observeEvent(input$submitB, {
+    #### Stop Timer ----
+    time$started <- FALSE
+    #### QB1 ----
+    if (!is.null(input$qB1)) {
+      if (input$qB1 == questionBank[4, "Type"]) {
+        scoreLevelB(scoreLevelB() + 2)
+        output$ansB1 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelB(scoreLevelB() - 2)
+        output$ansB1 <- renderUI({
+          img(src = "cross.png", width = 50)
+        })
+      }
+    }
+    #### QB2 ----
+    if (!is.null(input$qB2)) {
+      if (input$qB2 == questionBank[5, "Type"]) {
+        scoreLevelB(scoreLevelB() + 2)
+        output$ansB2 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelB(scoreLevelB() - 2)
+        output$ansB2 <- renderUI({
+          img(src = "cross.PNG", width = 50)
+        })
+      }
+    }
+    #### QB3 ----
+    if (!is.null(input$qB3)) {
+      if (input$qB3 == questionBank[6, "Type"]) {
+        scoreLevelB(scoreLevelB() + 2)
+        output$ansB3 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelB(scoreLevelB() - 2)
+        output$ansB3 <- renderUI({
+          img(src = "cross.PNG", width = 50)
+        })
+      }
+    }
+    #### Disable Submit Button ----
+    updateButton(
+      session = session,
+      inputId = "submitB",
+      disabled = TRUE
+    )
+    #### Enable Next button ----
+    if(!is.null(scoreLevelB()) ){
+      updateButton(
+        session = session,
+        inputId = "nextB",
+        disabled = FALSE
+      )
+    }
+
+    #### Enable Reattempt Button ----
+    if(scoreLevelB() < 6){
+      updateButton(
+        session = session,
+        inputId = "reattemptB",
+        disabled = FALSE
+      )
+    }
+  })
+
+  ### Level C Scoring/Submit Button ----
+  observeEvent(input$submitC, {
+    #### Stop Timer ----
+    time$started <- FALSE
+    #### QC1 ----
+    if (!is.null(input$qC1)) {
+      if (input$qC1 == questionBank[7, "Type"]) {
+        scoreLevelC(scoreLevelC() + 2)
+        output$ansC1 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelC(scoreLevelC() - 2)
+        output$ansC1 <- renderUI({
+          img(src = "cross.png", width = 50)
+        })
+      }
+    }
+    #### QC2 ----
+    if (!is.null(input$qC2)) {
+      if (input$qC2 == questionBank[8, "Type"]) {
+        scoreLevelC(scoreLevelC() + 2)
+        output$ansC2 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelC(scoreLevelC() - 2)
+        output$ansC2 <- renderUI({
+          img(src = "cross.PNG", width = 50)
+        })
+      }
+    }
+    #### QC3 ----
+    if (!is.null(input$qC3)) {
+      if (input$qC3 == questionBank[9, "Type"]) {
+        scoreLevelC(scoreLevelC() + 2)
+        output$ansC3 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelC(scoreLevelC() - 2)
+        output$ansC3 <- renderUI({
+          img(src = "cross.PNG", width = 50)
+        })
+      }
+    }
+    #### QC4 ----
+    if (!is.null(input$qC4)) {
+      if (input$qC4 == questionBank[10, "Type"]) {
+        scoreLevelC(scoreLevelC() + 2)
+        output$ansC4 <- renderUI({
+          img(src = "check.png", width = 50)
+        })
+      } else {
+        scoreLevelC(scoreLevelC() - 2)
+        output$ansC4 <- renderUI({
+          img(src = "cross.PNG", width = 50)
+        })
+      }
+    }
+    #### Disable Submit Button ----
+    updateButton(
+      session = session,
+      inputId = "submitC",
+      disabled = TRUE
+    )
+    #### Enable Next button ----
+    if(!is.null(scoreLevelC()) ){
+      updateButton(
+        session = session,
+        inputId = "nextC",
+        disabled = FALSE
+      )
+    }
+    #### Enable Reattempt Button ----
+    if(scoreLevelC() < 8){
+      updateButton(
+        session = session,
+        inputId = "reattemptC",
+        disabled = FALSE
+      )
+    }
+  })
+
+  ## Reattempt Buttons ----
+  observeEvent(input$reattemptA, {
+    output$ansA1 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    output$ansA2 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    output$ansA3 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    scoreLevelA(0)
+    time$started <- TRUE
+    updateButton(
+      session = session,
+      inputId = "submitA",
+      disabled = FALSE
+    )
+  })
+
+  observeEvent(input$reattemptB, {
+    output$ansB1 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    output$ansB2 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    output$ansB3 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    scoreLevelB(0)
+    time$started <- TRUE
+    updateButton(
+      session = session,
+      inputId = "submitB",
+      disabled = FALSE
+    )
+  })
+
+  observeEvent(input$reattemptC, {
+    output$ansC1 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    output$ansC2 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    output$ansC3 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    output$ansC4 <- renderUI({
+      img(src = NULL, width = 30)
+    })
+    scoreLevelC(0)
+    time$started <- TRUE
+    updateButton(
+      session = session,
+      inputId = "submitC",
+      disabled = FALSE
+    )
+  })
+
+  # Generate Questions for Display ----
 
   observeEvent(input$go2, {
-    numbers$important <- sample(2:6, 1)
-    numbers$filtering <- sample(7:11, 1)
-    numbers$deliberate <- sample(12:16, 1)
-    numbers$anchoring <- sample(17:21, 1)
-    numbers$unintentional <- sample(22:26, 1)
-    numbers$unnecessary <- sample(27:31, 1)
-    numbers$nonbias <- sample(32:35, 1)
-  })
+    tempBankA <- bank %>%
+      filter(Type %in% c("filtering", "deliberate", "anchoring")) %>%
+      slice_sample(n = 3)
 
-  output$importantID1 <- renderText({
-    bank[numbers$important[1], 2]
-  })
+    tempBankB <- bank %>%
+      filter(Type %in% c("unnecessary", "nonbias", "unintential")) %>%
+      slice_sample(n = 3)
 
-  output$importantName1 <- renderText({
-    bank[numbers$important[1], 3]
-  })
+    tempBankC <- bank %>%
+      filter(Type %in% c("filtering", "unnecessary", "nonbias", "unintential")) %>%
+      filter(!(Var %in% c(tempBankA$Var, tempBankB$Var))) %>%
+      slice_sample(n = 4)
 
-  output$unintentionalID1 <- renderText({
-    bank[numbers$unintentional[1], 2]
-  })
+    questionBank <<- rbind(tempBankA, tempBankB, tempBankC)
 
-  output$unintentionalName1 <- renderText({
-    bank[numbers$unintentional[1], 3]
-  })
-
-  output$unintentionalID2 <- renderText({
-    bank[numbers$unintentional[1], 2]
-  })
-
-  output$unintentionalName2 <- renderText({
-    bank[numbers$unintentional[1], 3]
-  })
-
-  output$filteringID1 <- renderText({
-    bank[numbers$filtering[1], 2]
-  })
-
-  output$filteringName1 <- renderText({
-    bank[numbers$filtering[1], 3]
-  })
-  output$filteringID2 <- renderText({
-    bank[numbers$filtering[1], 2]
-  })
-
-  output$filteringName2 <- renderText({
-    bank[numbers$filtering[1], 3]
-  })
-
-  output$anchoringID1 <- renderText({
-    bank[numbers$anchoring[1], 2]
-  })
-
-  output$anchoringName1 <- renderText({
-    bank[numbers$anchoring[1], 3]
-  })
-
-  output$deliberateID1 <- renderText({
-    bank[numbers$deliberate[1], 2]
-  })
-
-  output$deliberateName1 <- renderText({
-    bank[numbers$deliberate[1], 3]
-  })
-
-  output$unnecessaryID1 <- renderText({
-    bank[numbers$unnecessary[1], 2]
-  })
-
-  output$unnecessaryName1 <- renderText({
-    bank[numbers$unnecessary[1], 3]
-  })
-
-  output$unnecessaryID2 <- renderText({
-    bank[numbers$unnecessary[1], 2]
-  })
-
-  output$unnecessaryName2 <- renderText({
-    bank[numbers$unnecessary[1], 3]
-  })
-
-  output$deliberateID2 <- renderText({
-    bank[numbers$deliberate[1], 2]
-  })
-
-  output$deliberateName2 <- renderText({
-    bank[numbers$deliberate[1], 3]
-  })
-
-  output$anchoringID2 <- renderText({
-    bank[numbers$anchoring[1], 2]
-  })
-
-  output$anchoringName2 <- renderText({
-    bank[numbers$anchoring[1], 3]
-  })
-
-  output$nonbiasID1 <- renderText({
-    bank[numbers$nonbias[1], 2]
-  })
-
-  output$nonbiasName1 <- renderText({
-    bank[numbers$nonbias[1], 3]
-  })
-
-  output$nonbiasID2 <- renderText({
-    bank[numbers$nonbias[1], 2]
-  })
-
-  output$nonbiasNAME2 <- renderText({
-    bank[numbers$nonbias[1], 3]
-  })
-
-  observeEvent(input$submitA, {
-    updateButton(session, "submitA", disabled = TRUE)
-  })
-  
-  observeEvent(input$Reset, {
-    updateButton(session, "submitA", disabled = FALSE)
-  })
-  
-  observeEvent(input$submitB, {
-    updateButton(session, "submitB", disabled = TRUE)
-  })
-  
-  observeEvent(input$ResetB, {
-    updateButton(session, "submitB", disabled = FALSE)
-  })
-
-  observeEvent(input$submitA, {
-    output$answer2 <- renderUI({
-      if (!is.null(input$first)) {
-        if (input$first == bank[numbers$filtering, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
+    ## Render Question Text ----
+    output$questionA1 <- renderText({
+      questionBank[1, "Survey.Question"]
     })
-    
-    output$answer3 <- renderUI({
-      if (!is.null(input$second)) {
-        if (input$second == bank[numbers$anchoring, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
+    output$questionA2 <- renderText({
+      questionBank[2, "Survey.Question"]
     })
-    
-    output$answer4 <- renderUI({
-      if (!is.null(input$third)) {
-        if (input$third == bank[numbers$anchoring, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
+    output$questionA3 <- renderText({
+      questionBank[3, "Survey.Question"]
+    })
+
+    output$questionB1 <- renderText({
+      questionBank[4, "Survey.Question"]
+    })
+    output$questionB2 <- renderText({
+      questionBank[5, "Survey.Question"]
+    })
+    output$questionB3 <- renderText({
+      questionBank[6, "Survey.Question"]
+    })
+
+    output$questionC1 <- renderText({
+      questionBank[7, "Survey.Question"]
+    })
+    output$questionC2 <- renderText({
+      questionBank[8, "Survey.Question"]
+    })
+    output$questionC3 <- renderText({
+      questionBank[9, "Survey.Question"]
+    })
+    output$questionC4 <- renderText({
+      questionBank[10, "Survey.Question"]
     })
   })
 
-  observeEvent(input$Reset, {
-    output$answer4 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    
-    output$answer2 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    
-    output$answer3 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    
-    score1 <- 0
-    score2 <- 0
-    score3 <- 0
-    
-    ### TODO: THIS IS BEING USED BY ALL TABS BUT ONLY CLEARS THE FIRST
+  ## Score Outputs ----
+  output$scoreA <- renderText({
+    paste("Your score is", scoreLevelA(), ".")
   })
 
-  observeEvent(input$submitB, {
-    output$answer2 <- renderUI({
-      if (!is.null(input$forth)) {
-        if (input$forth == bank[numbers$unnecessary, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
-    })
-    
-    output$answer3 <- renderUI({
-      if (!is.null(input$fifth)) {
-        if (input$fifth == bank[numbers$filtering, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
-    })
-    
-    output$answer4 <- renderUI({
-      if (!is.null(input$sixth)) {
-        if (input$sixth == bank[numbers$nonbias, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
-    })
+  output$finalAScore <- renderText({
+    paste("Your score for Level A:", scoreLevelA())
   })
 
-  observeEvent(input$ResetB, {
-    output$answer6 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    
-    output$answer7 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    
-    output$answer8 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    
-    score4 <- 0
-    score5 <- 0
-    score6 <- 0
+  output$scoreB <- renderText({
+    paste("Your score is", scoreLevelB(), ".")
   })
 
-  observeEvent(input$submitC, {
-    output$answer9 <- renderUI({
-      if (!is.null(input$seventh)) {
-        if (input$seventh == bank[numbers$unintentional, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
-    })
-    
-    output$answer10 <- renderUI({
-      if (!is.null(input$eighth)) {
-        if (input$eighth == bank[numbers$unnecessary, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
-    })
-    
-    output$answer11 <- renderUI({
-      if (!is.null(input$ninth)) {
-        if (input$ninth == bank[numbers$filtering, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
-    })
-    
-    output$answer12 <- renderUI({
-      if (!is.null(input$tenth)) {
-        if (input$tenth == bank[numbers$nonbias, "Type"]) {
-          img(src = "check.png", width = 20)
-        } else {
-          img(src = "wrong.png", width = 20)
-        }
-      }
-    })
-  })
-
-  ######### Scoring
-  summation <- reactiveValues(summationA = c(rep(0, 20)), summationB = c(rep(0, 20)), summationScore = c(rep(0, 20)))
-  
-  observeEvent(input$submitA, {
-    score1 <- c()
-    score2 <- c()
-    score3 <- c()
-
-    for (i in c(input$first)) {
-      if (i == bank[numbers$filtering, "Type"]) {
-        score1 <- c(score1, 10)
-      } else {
-        score1 <- c(score1, 10)
-      }
-    }
-    
-    for (i in c(input$second)) {
-      if (i == bank[numbers$filtering, "Type"]) {
-        score2 <- c(score2, 10)
-      } else {
-        score2 <- c(score2, 10)
-      }
-    }
-    
-    for (i in c(input$third)) {
-      if (i == bank[numbers$filtering, "Type"]) {
-        score3 <- c(score3, 10)
-      } else {
-        score3 <- c(score3, 10)
-      }
-    }
-
-    # summation$summationA <- c(summation$summationA, sum(c(score1, score2, score3)))
-    summation$summationA[input$submitA] <- sum(c(score1, score2, score3))
-  })
-
-  observeEvent(input$submitB, {
-    score6 <- c()
-    score7 <- c()
-    score8 <- c()
-
-    for (i in c(input$drp6)) {
-      if (any(i == paste("\n", bank[c(32:36), 3], "\n", sep = ""))) {
-        score6 <- c(score6, 10)
-      } else {
-        score6 <- c(score6, -5)
-      }
-    }
-    
-    for (i in c(input$drp7)) {
-      if (any(i == paste("\n", bank[c(22:26), 3], "\n", sep = ""))) {
-        score7 <- c(score7, 10)
-      } else {
-        score7 <- c(score7, -5)
-      }
-    }
-    
-    for (i in c(input$drp8)) {
-      if (any(i == paste("\n", bank[c(27:31), 3], "\n", sep = ""))) {
-        score8 <- c(score8, 10)
-      } else {
-        score8 <- c(score8, -5)
-      }
-    }
-
-    # summation$summationB <- c(summation$summationB, sum(score5))
-    summation$summationB[input$submitB] <- sum(c(score6, score7, score8))
-  })
-
-  observeEvent(input$submitC, {
-    score9 <- c()
-    score10 <- c()
-    score11 <- c()
-    score12 <- c()
-    score13 <- c()
-    score14 <- c()
-
-    for (i in c(input$drp9)) {
-      if (any(i == paste("\n", bank[c(32:36), 3], "\n", sep = ""))) {
-        score9 <- c(score9, 10)
-      } else {
-        score9 <- c(score9, -5)
-      }
-    }
-    
-    for (i in c(input$drp10)) {
-      if (any(i == paste("\n", bank[c(22:26), 3], "\n", sep = ""))) {
-        score10 <- c(score10, 10)
-      }
-      else {
-        score10 <- c(score10, -5)
-      }
-    }
-    
-    for (i in c(input$drp11)) {
-      if (any(i == paste("\n", bank[c(27:31), 3], "\n", sep = ""))) {
-        score11 <- c(score11, 10)
-      } else {
-        score11 <- c(score11, -5)
-      }
-    }
-    
-    for (i in c(input$drp12)) {
-      if (any(i == paste("\n", bank[c(7:11), 3], "\n", sep = ""))) {
-        score12 <- c(score12, 10)
-      } else {
-        score12 <- c(score12, -5)
-      }
-    }
-    
-    for (i in c(input$drp13)) {
-      if (any(i == paste("\n", bank[c(7:11), 3], "\n", sep = ""))) {
-        score13 <- c(score13, 0)
-      } else {
-        score13 <- c(score13, 0)
-      }
-    }
-    
-    for (i in c(input$drp14)) {
-      if (any(i == paste("\n", bank[c(7:11), 3], "\n", sep = "", sep = ""))) {
-        score14 <- c(score14, 0)
-      } else {
-        score14 <- c(score14, 0)
-      }
-    }
-
-    # summation$summationC <- c(summation$summationC, sum(c(score9,score10,score11,score12,score13,score14))
-    summation$summationC[input$submitC] <- sum(c(score9, score10, score11, score12, score13, score14))
-  })
-
-  values <- reactiveValues(
-    count = 0
-  )
-  
-  observeEvent(input$submitA, {
-    if (summation$summationA[input$submitA] == 30) {
-      updateButton(session, "next1", disabled = FALSE)
-      # values$count = values$count + 30
-    }
-  })
-  
-  observeEvent(input$submitB, {
-    if (summation$summationB[input$submitB] == 30) {
-      updateButton(session, "next2", disabled = FALSE)
-      # values$count = values$count + 30
-    }
-  })
-  
-  observeEvent(input$submitC, {
-    if (summation$summationC[input$submitC] == 40) {
-      updateButton(session, "finish", disabled = FALSE)
-      # values$count = values$count + 30
-    } else {
-      updateButton(session, "finish", disabled = TRUE)
-    }
-  })
-
-  output$scoreA <- renderPrint({
-    cat("Score", summation$summationA[input$submitA])
-  })
-
-  output$scoreB <- renderPrint({
-    cat("Score", summation$summationB[input$submitB])
+  output$finalBScore <- renderText({
+    paste("Your score for Level B:", scoreLevelB())
   })
 
   output$scoreC <- renderPrint({
-    cat("Score", summation$summationC[input$submitC])
+    cat("Your score is", scoreLevelC(), ".")
+  })
+
+  output$finalCScore <- renderText({
+    paste("Your score for Level C:", scoreLevelC())
+  })
+
+  output$totalScore <- renderText({
+    paste("Your total score is", scoreLevelA() + scoreLevelB() + scoreLevelC(), ".")
   })
 }
 
 # Create Shiny App using BOAST App template
 boastApp(ui = ui, server = server)
-# shinyApp(ui = ui, server = server) # For testing purposes only
