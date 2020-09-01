@@ -1,15 +1,9 @@
 # Load Packages
-library(shiny)
-library(shinydashboard)
-library(shinyBS)
+library(dplyr)
 library(boastUtils)
-library(ggplot2)
-library(shinyDND)
-library(png)
+library(shinyBS)
 library(shinyjs)
 library(shinyWidgets)
-library(V8)
-library(dplyr)
 
 # App Meta Data----------------------------------------------------------------
 APP_TITLE <<- "Survey Question Wording Bias"
