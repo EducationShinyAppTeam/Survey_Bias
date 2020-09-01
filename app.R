@@ -4,6 +4,7 @@ library(boastUtils)
 library(shinyBS)
 library(shinyjs)
 library(shinyWidgets)
+library(V8)
 
 # App Meta Data----------------------------------------------------------------
 APP_TITLE <<- "Survey Question Wording Bias"
@@ -837,6 +838,18 @@ ui <- list(
             "Chang, W. and Borges Ribeiro, B. (2018). shinydashboard:
                       Create Dashboards with 'Shiny'. R package version 0.7.1.
                       Available from https://CRAN.R-project.org/package=shinydashboard"
+          ),
+          p(
+            class = "hangingindent",
+            "Ooms, J. (2020). V8: Embedded JavaScript and WebAssembly
+                       Engine for R. R package version 3.0.2. Available from
+                       https://CRAN.R-project.org/package=V8"
+          ),
+          p(
+            class = "hangingindent",
+            "Wickham, H., Francois, R., Henry L., and Muller K. (2020). dplyr:
+                      A Grammar of Data Manipulation for R. R package version 1.0.2. Available from
+                      https://CRAN.R-project.org/package=dplyr"
           )
         )
       )
@@ -1182,7 +1195,7 @@ less time watching television, playing computer games, and listening to music?"
       } else {
         scoreLevelB(scoreLevelB() - 2)
         output$ansB3 <- renderUI({
-          img(src = "cross.PNG", width = 50)
+          img(src = "cross.png", width = 50)
         })
       }
     }
@@ -1239,7 +1252,7 @@ less time watching television, playing computer games, and listening to music?"
       } else {
         scoreLevelC(scoreLevelC() - 2)
         output$ansC2 <- renderUI({
-          img(src = "cross.PNG", width = 50)
+          img(src = "cross.png", width = 50)
         })
       }
     }
