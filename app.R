@@ -18,8 +18,8 @@ APP_DESCP <<- paste(
 # Load additional dependencies and setup functions ----
 bank <- read.csv("easyQuestions.csv", stringsAsFactors = FALSE, header = TRUE)
 choicesA <- c("Select Answer", "filtering", "deliberate", "anchoring")
-choicesB <- c("Select Answer", "unnecessary", "nonbias", "unintentional")
-choicesC <- c("Select Answer", "filtering", "unnecessary", "nonbias", "unintentional")
+choicesB <- c("Select Answer", "unnecessary", "unbiased", "unintentional")
+choicesC <- c("Select Answer", "filtering", "unnecessary", "unbiased", "unintentional")
 
 jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
 
@@ -1377,11 +1377,11 @@ less time watching television, playing computer games, and listening to music?"
       slice_sample(n = 3)
 
     tempBankB <- bank %>%
-      filter(Type %in% c("unnecessary", "nonbias", "unintential")) %>%
+      filter(Type %in% c("unnecessary", "unbiased", "unintential")) %>%
       slice_sample(n = 3)
 
     tempBankC <- bank %>%
-      filter(Type %in% c("filtering", "unnecessary", "nonbias", "unintential")) %>%
+      filter(Type %in% c("filtering", "unnecessary", "unbiased", "unintential")) %>%
       filter(!(Var %in% c(tempBankA$Var, tempBankB$Var))) %>%
       slice_sample(n = 4)
 
