@@ -1091,12 +1091,12 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qA1 == questionBank[1, "Type"]) {
         scoreLevelA(scoreLevelA() + 2)
         output$ansA1 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelA(scoreLevelA() - 2)
         output$ansA1 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.PNG", width = 50)
         })
       }
     }
@@ -1105,7 +1105,7 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qA2 == questionBank[2, "Type"]) {
         scoreLevelA(scoreLevelA() + 2)
         output$ansA2 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelA(scoreLevelA() - 2)
@@ -1119,7 +1119,7 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qA3 == questionBank[3, "Type"]) {
         scoreLevelA(scoreLevelA() + 2)
         output$ansA3 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelA(scoreLevelA() - 2)
@@ -1162,12 +1162,12 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qB1 == questionBank[4, "Type"]) {
         scoreLevelB(scoreLevelB() + 2)
         output$ansB1 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelB(scoreLevelB() - 2)
         output$ansB1 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.PNG", width = 50)
         })
       }
     }
@@ -1176,7 +1176,7 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qB2 == questionBank[5, "Type"]) {
         scoreLevelB(scoreLevelB() + 2)
         output$ansB2 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelB(scoreLevelB() - 2)
@@ -1190,12 +1190,12 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qB3 == questionBank[6, "Type"]) {
         scoreLevelB(scoreLevelB() + 2)
         output$ansB3 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelB(scoreLevelB() - 2)
         output$ansB3 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.PNG", width = 50)
         })
       }
     }
@@ -1233,12 +1233,12 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qC1 == questionBank[7, "Type"]) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC1 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelC(scoreLevelC() - 2)
         output$ansC1 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.PNG", width = 50)
         })
       }
     }
@@ -1247,12 +1247,12 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qC2 == questionBank[8, "Type"]) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC2 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelC(scoreLevelC() - 2)
         output$ansC2 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.PNG", width = 50)
         })
       }
     }
@@ -1261,7 +1261,7 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qC3 == questionBank[9, "Type"]) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC3 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelC(scoreLevelC() - 2)
@@ -1275,7 +1275,7 @@ less time watching television, playing computer games, and listening to music?"
       if (input$qC4 == questionBank[10, "Type"]) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC4 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.PNG", width = 50)
         })
       } else {
         scoreLevelC(scoreLevelC() - 2)
