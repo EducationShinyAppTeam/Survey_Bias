@@ -1093,12 +1093,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelA(scoreLevelA() + 2)
         output$ansA1 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelA(scoreLevelA() - 2)
         output$ansA1 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
@@ -1121,12 +1121,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelA(scoreLevelA() + 2)
         output$ansA2 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelA(scoreLevelA() - 2)
         output$ansA2 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
@@ -1149,12 +1149,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelA(scoreLevelA() + 2)
         output$ansA3 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelA(scoreLevelA() - 2)
         output$ansA3 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
@@ -1206,12 +1206,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelB(scoreLevelB() + 2)
         output$ansB1 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelB(scoreLevelB() - 2)
         output$ansB1 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
@@ -1234,12 +1234,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelB(scoreLevelB() + 2)
         output$ansB2 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelB(scoreLevelB() - 2)
         output$ansB2 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
@@ -1262,12 +1262,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelB(scoreLevelB() + 2)
         output$ansB3 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelB(scoreLevelB() - 2)
         output$ansB3 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
@@ -1319,12 +1319,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC1 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelC(scoreLevelC() - 2)
         output$ansC1 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
@@ -1347,12 +1347,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC2 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelC(scoreLevelC() - 2)
         output$ansC2 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
@@ -1375,12 +1375,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC3 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelC(scoreLevelC() - 2)
         output$ansC3 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
@@ -1403,12 +1403,12 @@ less time watching television, playing computer games, and listening to music?"
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC4 <- renderUI({
-          img(src = "check.png", width = 50)
+          img(src = "check.png", alt = "Success, you are correct", width = 50)
         })
       } else {
         scoreLevelC(scoreLevelC() - 2)
         output$ansC4 <- renderUI({
-          img(src = "cross.png", width = 50)
+          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
       
