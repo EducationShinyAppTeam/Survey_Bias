@@ -2,27 +2,13 @@
 library(dplyr)
 library(boastUtils)
 library(shinyBS)
-library(shinyjs)
 library(shinyWidgets)
-library(V8)
-
-# App Meta Data----------------------------------------------------------------
-APP_TITLE <<- "Survey Question Wording Bias"
-APP_DESCP <<- paste(
-  "This app is focused on learning about common types of biased wording in",
-  "survey samples (deliberate bias; filtering; anchoring; unintentional bias;",
-  "unnecessary complexity; and asking the uninformed)."
-)
-# End App Meta Data------------------------------------------------------------
 
 # Load additional dependencies and setup functions ----
 bank <- read.csv("easyQuestions.csv", stringsAsFactors = FALSE, header = TRUE)
 choicesA <- c("Select Answer", "filtering", "deliberate", "anchoring")
 choicesB <- c("Select Answer", "unnecessary", "unbiased", "unintentional")
 choicesC <- c("Select Answer", "filtering", "unnecessary", "unbiased", "unintentional")
-
-jsResetCode <- "shinyjs.reset = function() {history.go(0)}"
-
 
 # Define UI for App
 ui <- list(
@@ -46,7 +32,7 @@ ui <- list(
     ### Create the sidebar/left navigation menu
     dashboardSidebar(
       sidebarMenu(
-        id = "tabs",
+        id = "pages",
         width = 250,
         menuItem("Overview", tabName = "Overview", icon = icon("tachometer-alt")),
         menuItem("Explore", tabName = "Explore", icon = icon("wpexplorer")),
@@ -371,8 +357,6 @@ ui <- list(
               )
             )
           ),
-          useShinyjs(),
-          extendShinyjs(text = jsResetCode),
           fluidRow(
             column(
               width = 3,
@@ -400,7 +384,6 @@ ui <- list(
         tabItem(
           tabName = "Game",
           withMathJax(),
-          useShinyjs(),
           h2("Survey Bias Game"),
           tabsetPanel(
             id = "gameLevels",
@@ -817,12 +800,6 @@ ui <- list(
           h2("References"),
           p(
             class = "hangingindent",
-            "Attali, D. (2020). shinyjs: Easily Improve the User
-                      Experience of Your Shiny Apps in Seconds. R package
-                      version 1.1. Available from https://CRAN.R-project.org/package=shinyjs"
-          ),
-          p(
-            class = "hangingindent",
             "Bailey, E. (2015). shinyBS: Twitter Bootstrap Components
                       for Shiny. R package version 0.61. Available from
                       https://CRAN.R-project.org/package=shinyBS"
@@ -890,14 +867,18 @@ server <- function(input, output, session) {
 
   # Reset Button For Main Page ----
   observeEvent(input$reset_button, {
-    js$reset()
+    updateTabItems(
+      session = session,
+      inputId = "pages",
+      selected = "Overview"
+    )
   })
 
   ### go button ----
   observeEvent(input$go1, {
     updateTabItems(
       session = session,
-      inputId = "tabs",
+      inputId = "pages",
       selected = "Explore"
     )
   })
@@ -906,7 +887,7 @@ server <- function(input, output, session) {
   observeEvent(input$playGame, {
     updateTabItems(
       session = session,
-      inputId = "tabs",
+      inputId = "pages",
       selected = "Game"
     )
   })
