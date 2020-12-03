@@ -850,7 +850,11 @@ ui <- list(
             "Wickham, H., Francois, R., Henry L., and Muller K. (2020). dplyr:
                       A Grammar of Data Manipulation for R. R package version 1.0.2. Available from
                       https://CRAN.R-project.org/package=dplyr"
-          )
+          ),
+          br(),
+          br(),
+          br(),
+          boastUtils::copyrightInfo()
         )
       )
     )
@@ -1089,7 +1093,7 @@ less time watching television, playing computer games, and listening to music?"
     #### QA1 ----
     if (!is.null(input$qA1)) {
       correct <- input$qA1 == questionBank[1, "Type"]
-      
+
       if (correct) {
         scoreLevelA(scoreLevelA() + 2)
         output$ansA1 <- renderUI({
@@ -1101,7 +1105,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1111,13 +1115,13 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qA1,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### QA2 ----
     if (!is.null(input$qA2)) {
       correct <- input$qA2 == questionBank[2, "Type"]
-      
+
       if (correct) {
         scoreLevelA(scoreLevelA() + 2)
         output$ansA2 <- renderUI({
@@ -1129,7 +1133,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1139,13 +1143,13 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qA2,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### QA3 ----
     if (!is.null(input$qA3)) {
       correct <- input$qA3 == questionBank[3, "Type"]
-      
+
       if (correct) {
         scoreLevelA(scoreLevelA() + 2)
         output$ansA3 <- renderUI({
@@ -1157,7 +1161,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1167,7 +1171,7 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qA3,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### Disable Submit Button ----
@@ -1202,7 +1206,7 @@ less time watching television, playing computer games, and listening to music?"
     #### QB1 ----
     if (!is.null(input$qB1)) {
       correct <- input$qB1 == questionBank[4, "Type"]
-      
+
       if (correct) {
         scoreLevelB(scoreLevelB() + 2)
         output$ansB1 <- renderUI({
@@ -1214,7 +1218,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1224,13 +1228,13 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qB1,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### QB2 ----
     if (!is.null(input$qB2)) {
       correct <- input$qB2 == questionBank[5, "Type"]
-      
+
       if (correct) {
         scoreLevelB(scoreLevelB() + 2)
         output$ansB2 <- renderUI({
@@ -1242,7 +1246,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1252,13 +1256,13 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qB2,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### QB3 ----
     if (!is.null(input$qB3)) {
       correct <- input$qB3 == questionBank[6, "Type"]
-      
+
       if (correct) {
         scoreLevelB(scoreLevelB() + 2)
         output$ansB3 <- renderUI({
@@ -1270,7 +1274,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1280,7 +1284,7 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qB3,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### Disable Submit Button ----
@@ -1315,7 +1319,7 @@ less time watching television, playing computer games, and listening to music?"
     #### QC1 ----
     if (!is.null(input$qC1)) {
       correct <- input$qC1 == questionBank[7, "Type"]
-      
+
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC1 <- renderUI({
@@ -1327,7 +1331,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1337,13 +1341,13 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qC1,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### QC2 ----
     if (!is.null(input$qC2)) {
       correct <- input$qC2 == questionBank[8, "Type"]
-      
+
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC2 <- renderUI({
@@ -1355,7 +1359,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1365,13 +1369,13 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qC2,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### QC3 ----
     if (!is.null(input$qC3)) {
       correct <- input$qC3 == questionBank[9, "Type"]
-      
+
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC3 <- renderUI({
@@ -1383,7 +1387,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1393,13 +1397,13 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qC3,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### QC4 ----
     if (!is.null(input$qC4)) {
       correct <- input$qC4 == questionBank[10, "Type"]
-      
+
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
         output$ansC4 <- renderUI({
@@ -1411,7 +1415,7 @@ less time watching television, playing computer games, and listening to music?"
           img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
         })
       }
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "answered",
@@ -1421,7 +1425,7 @@ less time watching television, playing computer games, and listening to music?"
         response = input$qC4,
         success = correct
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### Disable Submit Button ----
@@ -1437,7 +1441,7 @@ less time watching television, playing computer games, and listening to music?"
         inputId = "nextC",
         disabled = FALSE
       )
-      
+
       stmt <- boastUtils::generateStatement(
         session,
         verb = "completed",
@@ -1452,7 +1456,7 @@ less time watching television, playing computer games, and listening to music?"
           scoreLevelA() + scoreLevelB() + scoreLevelC()
         )
       )
-      
+
       boastUtils::storeStatement(session, stmt)
     }
     #### Enable Reattempt Button ----
