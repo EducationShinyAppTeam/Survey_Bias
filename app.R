@@ -7,8 +7,8 @@ library(shinyWidgets)
 # Load additional dependencies and setup functions ----
 bank <- read.csv("questionBank.csv", stringsAsFactors = FALSE, header = TRUE)
 choicesA <- c("Select Answer", "filtering", "deliberate bias", "anchoring")
-choicesB <- c("Select Answer", "unnecessary complexity", "unbiased", "unintentional")
-choicesC <- c("Select Answer", "filtering", "unnecessary complexity", "unbiased", "unintentional")
+choicesB <- c("Select Answer", "unnecessary complexity", "unbiased", "unintentional bias")
+choicesC <- c("Select Answer", "filtering", "unnecessary complexity", "unbiased", "unintentional bias")
 
 # Define UI for App
 ui <- list(

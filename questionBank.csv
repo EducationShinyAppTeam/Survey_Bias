@@ -19,11 +19,11 @@ anchoring,var17,"Keeping in mind that Qatar is the richest country in the world,
 anchoring,var18,"With McDonalds serving over more than 700 million customers each day, what is the most popular fast food joint?"
 anchoring,var19,"Knowing that 16 Shark attacks occur in the U.S. each year, what is the most dangerous sea creature?"
 anchoring,var20,"Knowing that New Jersey has almost 9 million people, what is the population of Pennsylvania?"
-unintentional,var21,Would you support a law that bans the adoption of foxes?
-unintentional,var22,Do you believe that all women should always be given free tampons in public restrooms?
-unintentional,var23,Do you believe that we should ban smoking cigarettes?
-unintentional,var24,Should younger kids be forbidden from watching R rated movies even at their parents discretion?
-unintentional,var25,Should minors with underage offenses be banned from getting their license until they are 21?
+unintentional bias,var21,Would you support a law that bans the adoption of foxes?
+unintentional bias,var22,Do you believe that all women should always be given free tampons in public restrooms?
+unintentional bias,var23,Do you believe that we should ban smoking cigarettes?
+unintentional bias,var24,Should younger kids be forbidden from watching R rated movies even at their parents discretion?
+unintentional bias,var25,Should minors with underage offenses be banned from getting their license until they are 21?
 unnecessary complexity,var26,Do you think that our country should increase funding for our military or for our education?
 unnecessary complexity,var27,Do we not have the right to freedom of speech?
 unnecessary complexity,var28,Does it seem possible or does it seem impossible to you that the Nazi extermination of the Jews never happened?
