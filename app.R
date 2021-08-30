@@ -6,13 +6,12 @@ library(shinyWidgets)
 
 # Load additional dependencies and setup functions ----
 bank <- read.csv("easyQuestions.csv", stringsAsFactors = FALSE, header = TRUE)
-choicesA <- c("Select Answer", "filtering", "deliberate", "anchoring")
-choicesB <- c("Select Answer", "unnecessary", "unbiased", "unintentional")
-choicesC <- c("Select Answer", "filtering", "unnecessary", "unbiased", "unintentional")
+choicesA <- c("Select Answer", "filtering", "deliberate bias", "anchoring")
+choicesB <- c("Select Answer", "unnecessary complexity", "unbiased", "unintentional")
+choicesC <- c("Select Answer", "filtering", "unnecessary complexity", "unbiased", "unintentional")
 
 # Define UI for App
 ui <- list(
-
   ## Create the app page
   dashboardPage(
     skin = "red",
@@ -21,6 +20,10 @@ ui <- list(
       title = "Survey Question Bias",
       titleWidth = 250,
       tags$li(class = "dropdown", actionLink("info", icon("info"))),
+      tags$li(
+        class = "dropdown",
+        boastUtils::surveyLink(name = "Survey_Bias")
+      ),
       tags$li(
         class = "dropdown",
         tags$a(
@@ -65,7 +68,7 @@ ui <- list(
           ),
           ##### Go Button--location will depend on your goals
           div(
-            style = "text-align: center",
+            style = "text-align: center;",
             bsButton(
               inputId = "go1",
               label = "GO!",
@@ -74,7 +77,6 @@ ui <- list(
               style = "default"
             )
           ),
-          ##### Create two lines of space
           br(),
           br(),
           h2("Acknowledgements"),
@@ -83,8 +85,11 @@ ui <- list(
             input from Xigang Zhang (2020).",
             br(),
             br(),
+            "Cite this app as:",
             br(),
-            div(class = "updated", "Last Update: 9/1/2020 by NJH.")
+            boastUtils::citeApp(),
+            br(),
+            div(class = "updated", "Last Update: 8/30/2021 by NJH.")
           )
         ),
         #### Set up the Explore Page ----

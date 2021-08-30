@@ -1,11 +1,14 @@
 Title: Survey Question Wording Bias
 ShortName: Survey Bias
-Date: 2020-12-03
-Lifecycle: experimental
+Date: 2021-08-30
+Lifecycle: maturing
 Authors@R: c(
     person(given = "Ryan", family = "Manigly-Haney", role = c("aut", "cre")),
     person(given = "Yuxin", family = "Zhang", role = c("ctb")),
-    person(given = "Xigang", family = "Zhang", role = c("ctb"))
+    person(given = "Xigang", family = "Zhang", role = c("ctb")),
+    person(given = "Chense", family = "Gray", role = c("aut")),
+    person(given = "Dennis", family = "Pearl", role = c("aut")),
+    person(given = "Dennis", family = "Hatfield", role = c("aut"))
   )
 Chapter: Data Gathering
 Description: This app is focused on learning about common types of biased wording in survey samples (deliberate bias; filtering; anchoring; unintentional bias; unnecessary complexity; and asking the uninformed).
