@@ -5,7 +5,7 @@ library(shinyBS)
 library(shinyWidgets)
 
 # Load additional dependencies and setup functions ----
-bank <- read.csv("easyQuestions.csv", stringsAsFactors = FALSE, header = TRUE)
+bank <- read.csv("questionBank.csv", stringsAsFactors = FALSE, header = TRUE)
 choicesA <- c("Select Answer", "filtering", "deliberate bias", "anchoring")
 choicesB <- c("Select Answer", "unnecessary complexity", "unbiased", "unintentional")
 choicesC <- c("Select Answer", "filtering", "unnecessary complexity", "unbiased", "unintentional")
@@ -61,10 +61,15 @@ ui <- list(
           p("On the first page, simply click below each question that contains a
             bias to see what that bias is."),
           tags$ul(
-            tags$li("On the first page, simply click below each question that contains a bias to see what that bias is."),
-            tags$li("Pay attention! Because on the second page, you will be asked to match questions with their appropriate bias."),
-            tags$li("Note: you will be timed.  Each round will continue to increase in difficulty."),
-            tags$li("For the game portion, please note that some of the biases overlap.  So while one may seem fitting, it could be marked incorrect if there is a more dominant bias.")
+            tags$li("On the first page, simply click below each question that
+                    contains a bias to see what that bias is."),
+            tags$li("Pay attention! Because on the second page, you will be
+                    asked to match questions with their appropriate bias."),
+            tags$li("Note: you will be timed.  Each round will continue to
+                    increase in difficulty."),
+            tags$li("For the game portion, please note that some of the biases
+                    overlap.  So while one may seem fitting, it could be marked
+                    incorrect if there is a more dominant bias.")
           ),
           ##### Go Button--location will depend on your goals
           div(
@@ -89,6 +94,7 @@ ui <- list(
             br(),
             boastUtils::citeApp(),
             br(),
+            br(),
             div(class = "updated", "Last Update: 8/30/2021 by NJH.")
           )
         ),
@@ -99,7 +105,7 @@ ui <- list(
           h2("Explore Types of Survey Wording Bias"),
           tabsetPanel(
             type = "tabs",
-            ### Bias Examples tab----
+            ### Bias Examples tab ----
             tabPanel(
               title = "Wording Bias",
               br(),
@@ -130,7 +136,7 @@ ui <- list(
                     ),
                     br(), br(),
                     bsButton(
-                      inputId = "runif",
+                      inputId = "fixDeliberateBias",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
@@ -138,7 +144,7 @@ ui <- list(
                     br(), br(),
                     p(
                       class = "answertext",
-                      tags$strong(textOutput("text_example", inline = TRUE))
+                      tags$strong(textOutput("deliberateExample", inline = TRUE))
                     )
                   )
                 ),
@@ -157,14 +163,15 @@ ui <- list(
                     p("Problematic Example:",
                       br(),
                       "What is your opinion of our current President?",
-                      br(),
-                      "a. Favorable",
-                      br(),
-                      "b. Unfavorable"
+                      tags$ol(
+                        type = "a",
+                        tags$li("Favorable"),
+                        tags$li("Unfavorable")
+                      )
                     ),
                     br(), br(),
                     bsButton(
-                      inputId = "runif1",
+                      inputId = "fixFiltering",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
@@ -172,7 +179,7 @@ ui <- list(
                     br(), br(),
                     p(
                       class = "answertext",
-                      tags$strong(textOutput("text_example1", inline = TRUE))
+                      tags$strong(uiOutput("filteringExample", inline = TRUE))
                     )
                   )
                 )
@@ -199,7 +206,7 @@ ui <- list(
                     ),
                     br(), br(),
                     bsButton(
-                      inputId = "runif3",
+                      inputId = "fixAnchoring",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
@@ -207,7 +214,7 @@ ui <- list(
                     br(), br(),
                     p(
                       class = "answertext",
-                      tags$strong(textOutput("text_example3", inline = TRUE))
+                      tags$strong(textOutput("anchoringExample", inline = TRUE))
                     )
                   )
                 ),
@@ -234,7 +241,7 @@ ui <- list(
                     ),
                     br(), br(),
                     bsButton(
-                      inputId = "runif4",
+                      inputId = "fixUnintential",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
@@ -242,7 +249,7 @@ ui <- list(
                     br(), br(),
                     p(
                       class = "answertext",
-                      tags$strong(textOutput("text_example4", inline = TRUE))
+                      tags$strong(textOutput("unintentialExample", inline = TRUE))
                     )
                   )
                 )
@@ -269,7 +276,7 @@ ui <- list(
                     ),
                     br(), br(),
                     bsButton(
-                      inputId = "runif5",
+                      inputId = "fixDoubleBarrel",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
@@ -277,7 +284,7 @@ ui <- list(
                     br(), br(),
                     p(
                       class = "answertext",
-                      tags$strong(textOutput("text_example5", inline = TRUE))
+                      tags$strong(textOutput("doubleBarrelExample", inline = TRUE))
                     )
                   )
                 ),
@@ -303,7 +310,7 @@ ui <- list(
                     ),
                     br(), br(),
                     bsButton(
-                      inputId = "runif6",
+                      inputId = "fixDoubleNeg",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
@@ -311,7 +318,7 @@ ui <- list(
                     br(), br(),
                     p(
                       class = "answertext",
-                      tags$strong(textOutput("text_example6", inline = TRUE))
+                      tags$strong(textOutput("doubleNegExample", inline = TRUE))
                     )
                   )
                 )
@@ -321,11 +328,12 @@ ui <- list(
             tabPanel(
               title = "Did you know...",
               br(),
-              img(src = 'truman.png',
-                  align = "right",
-                  height = '50%',
-                  width = '50%',
-                  alt = "Truman holds paper with headline he lost when he won"
+              img(
+                src = 'truman.png',
+                align = "right",
+                height = '50%',
+                width = '50%',
+                alt = "Truman holds paper with headline he lost when he won"
               ),
               p("For the 1948 election between Thomas Dewey and Harry Truman,
                 Gallup conducted a poll with a sample size of about 3250. Each
@@ -367,7 +375,7 @@ ui <- list(
               width = 3,
               offset = 2,
               bsButton(
-                inputId = "reset_button",
+                inputId = "goToOverview",
                 label = "Return to Overview",
                 style = "default",
                 size = "large"
@@ -410,7 +418,7 @@ ui <- list(
                 will stop after all answers are submitted correctly."),
               p("Are you ready? If so, press Start!"),
               div(
-                style = "text-align: center",
+                style = "text-align: center;",
                 bsButton(
                   inputId = "go2",
                   label = "Start!",
@@ -424,7 +432,7 @@ ui <- list(
             tabPanel(
               title = "Level A",
               div(
-                style = "text-align: right",
+                style = "text-align: right;",
                 textOutput("timerA")
               ),
               h3("Level A"),
@@ -433,7 +441,7 @@ ui <- list(
               uiOutput("questionA1"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qA1",
                     label = "Bias Type",
@@ -443,6 +451,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansA1")
                 )
               ),
@@ -450,7 +459,7 @@ ui <- list(
               uiOutput("questionA2"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qA2",
                     label = "Bias Type",
@@ -460,6 +469,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansA2")
                 )
               ),
@@ -467,7 +477,7 @@ ui <- list(
               uiOutput("questionA3"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qA3",
                     label = "Bias Type",
@@ -477,6 +487,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansA3")
                 )
               ),
@@ -545,7 +556,7 @@ ui <- list(
               uiOutput("questionB1"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qB1",
                     label = "Bias Type",
@@ -555,6 +566,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansB1")
                 )
               ),
@@ -562,7 +574,7 @@ ui <- list(
               uiOutput("questionB2"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qB2",
                     label = "Bias Type",
@@ -572,6 +584,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansB2")
                 )
               ),
@@ -579,7 +592,7 @@ ui <- list(
               uiOutput("questionB3"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qB3",
                     label = "Bias Type",
@@ -589,6 +602,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansB3")
                 )
               ),
@@ -657,7 +671,7 @@ ui <- list(
               uiOutput("questionC1"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qC1",
                     label = "Bias Type",
@@ -667,6 +681,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansC1")
                 )
               ),
@@ -674,7 +689,7 @@ ui <- list(
               uiOutput("questionC2"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qC2",
                     label = "Bias Type",
@@ -684,6 +699,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansC2")
                 )
               ),
@@ -691,7 +707,7 @@ ui <- list(
               uiOutput("questionC3"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qC3",
                     label = "Bias Type",
@@ -701,6 +717,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansC3")
                 )
               ),
@@ -708,7 +725,7 @@ ui <- list(
               uiOutput("questionC4"),
               fluidRow(
                 column(
-                  width = 3,
+                  width = 4,
                   selectInput(
                     inputId = "qC4",
                     label = "Bias Type",
@@ -718,6 +735,7 @@ ui <- list(
                 column(
                   width = 2,
                   offset = 0,
+                  br(),
                   uiOutput("ansC4")
                 )
               ),
@@ -784,17 +802,7 @@ ui <- list(
               textOutput("finalCScore"),
               hr(),
               textOutput("totalScore"),
-              textOutput("finalTime"),
-              ## Reset button isn't working due to students' code
-              # div(
-              #   style = "text-align: center;",
-              #   bsButton(
-              #     inputId = "restart",
-              #     label = "Play Again",
-              #     style = "default",
-              #     size = "large"
-              #   )
-              # )
+              textOutput("finalTime")
             )
           )
         ),
@@ -871,7 +879,7 @@ server <- function(input, output, session) {
   })
 
   # Reset Button For Main Page ----
-  observeEvent(input$reset_button, {
+  observeEvent(input$goToOverview, {
     updateTabItems(
       session = session,
       inputId = "pages",
@@ -1008,17 +1016,22 @@ server <- function(input, output, session) {
   })
 
   # Exploration Page ----
-  observeEvent(input$runif, {
-    output$text_example <- renderText({
+  observeEvent(input$fixDeliberateBias, {
+    output$deliberateExample <- renderText({
       "Do you agree or disagree that it is hard
       for today's college graduates to have a bright future?"
     })
   })
 
-  observeEvent(input$runif1, {
-    output$text_example1 <- renderText({
-      "What is your opinion of our current President?
-      a. favorable b. unfavorable c. undecided"
+  observeEvent(input$fixFiltering, {
+    output$filteringExample <- renderUI({
+      p("What is your opinion of our current President?",
+        tags$ol(
+          type = "a",
+          tags$li("Favorable"),
+          tags$li("Unfavorable"),
+          tags$li("Undecided")
+        ))
     })
   })
 
@@ -1039,21 +1052,21 @@ server <- function(input, output, session) {
   #   })
   # })
 
-  observeEvent(input$runif3, {
-    output$text_example3 <- renderText({
+  observeEvent(input$fixAnchoring, {
+    output$anchoringExample <- renderText({
       "What is the population of Canada?"
     })
   })
 
-  observeEvent(input$runif4, {
-    output$text_example4 <- renderText({
+  observeEvent(input$fixUnintential, {
+    output$unintentialExample <- renderText({
       "Do you favor or oppose an ordinance that does not allow
       surveillance cameras to be placed on Beaver Avenue?"
     })
   })
 
-  observeEvent(input$runif5, {
-    output$text_example5 <- renderText({
+  observeEvent(input$fixDoubleBarrel, {
+    output$doubleBarrelExample <- renderText({
       "Who should have priority in receiving the smallpox vaccination?
       a. health care workers
       b. military personnel
@@ -1062,8 +1075,8 @@ server <- function(input, output, session) {
     })
   })
 
-  observeEvent(input$runif6, {
-    output$text_example6 <- renderText({
+  observeEvent(input$fixDoubleNeg, {
+    output$doubleNegExample <- renderText({
       "Do you agree or disagree that children who
       have a Body Mass Index (BMI) at or above the 95th percentile should spend
 less time watching television, playing computer games, and listening to music?"
@@ -1082,14 +1095,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelA(scoreLevelA() + 2)
-        output$ansA1 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansA1 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelA(scoreLevelA() - 2)
-        output$ansA1 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansA1 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1110,14 +1119,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelA(scoreLevelA() + 2)
-        output$ansA2 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansA2 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelA(scoreLevelA() - 2)
-        output$ansA2 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansA2 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1138,14 +1143,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelA(scoreLevelA() + 2)
-        output$ansA3 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansA3 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelA(scoreLevelA() - 2)
-        output$ansA3 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansA3 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1195,14 +1196,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelB(scoreLevelB() + 2)
-        output$ansB1 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansB1 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelB(scoreLevelB() - 2)
-        output$ansB1 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansB1 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1223,14 +1220,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelB(scoreLevelB() + 2)
-        output$ansB2 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansB2 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelB(scoreLevelB() - 2)
-        output$ansB2 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansB2 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1251,14 +1244,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelB(scoreLevelB() + 2)
-        output$ansB3 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansB3 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelB(scoreLevelB() - 2)
-        output$ansB3 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansB3 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1308,14 +1297,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
-        output$ansC1 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansC1 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelC(scoreLevelC() - 2)
-        output$ansC1 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansC1 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1336,14 +1321,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
-        output$ansC2 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansC2 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelC(scoreLevelC() - 2)
-        output$ansC2 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansC2 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1364,14 +1345,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
-        output$ansC3 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansC3 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelC(scoreLevelC() - 2)
-        output$ansC3 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansC3 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1392,14 +1369,10 @@ less time watching television, playing computer games, and listening to music?"
 
       if (correct) {
         scoreLevelC(scoreLevelC() + 2)
-        output$ansC4 <- renderUI({
-          img(src = "check.png", alt = "Success, you are correct", width = 50)
-        })
+        output$ansC4 <- boastUtils::renderIcon(icon = "correct", width = 52)
       } else {
         scoreLevelC(scoreLevelC() - 2)
-        output$ansC4 <- renderUI({
-          img(src = "cross.png", alt = "Sorry, you are incorrect", width = 50)
-        })
+        output$ansC4 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
       }
 
       stmt <- boastUtils::generateStatement(
@@ -1457,15 +1430,9 @@ less time watching television, playing computer games, and listening to music?"
 
   ## Reattempt Buttons ----
   observeEvent(input$reattemptA, {
-    output$ansA1 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    output$ansA2 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    output$ansA3 <- renderUI({
-      img(src = NULL, width = 30)
-    })
+    output$ansA1 <- renderIcon()
+    output$ansA2 <- renderIcon()
+    output$ansA3 <- renderIcon()
     scoreLevelA(0)
     time$started <- TRUE
     updateButton(
@@ -1476,15 +1443,9 @@ less time watching television, playing computer games, and listening to music?"
   })
 
   observeEvent(input$reattemptB, {
-    output$ansB1 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    output$ansB2 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    output$ansB3 <- renderUI({
-      img(src = NULL, width = 30)
-    })
+    output$ansB1 <- renderIcon()
+    output$ansB2 <- renderIcon()
+    output$ansB3 <- renderIcon()
     scoreLevelB(0)
     time$started <- TRUE
     updateButton(
@@ -1495,18 +1456,10 @@ less time watching television, playing computer games, and listening to music?"
   })
 
   observeEvent(input$reattemptC, {
-    output$ansC1 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    output$ansC2 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    output$ansC3 <- renderUI({
-      img(src = NULL, width = 30)
-    })
-    output$ansC4 <- renderUI({
-      img(src = NULL, width = 30)
-    })
+    output$ansC1 <- renderIcon()
+    output$ansC2 <- renderIcon()
+    output$ansC3 <- renderIcon()
+    output$ansC4 <- renderIcon()
     scoreLevelC(0)
     time$started <- TRUE
     updateButton(
@@ -1520,15 +1473,15 @@ less time watching television, playing computer games, and listening to music?"
 
   observeEvent(input$go2, {
     tempBankA <- bank %>%
-      filter(Type %in% c("filtering", "deliberate", "anchoring")) %>%
+      filter(Type %in% c("filtering", "deliberate bias", "anchoring")) %>%
       slice_sample(n = 3)
 
     tempBankB <- bank %>%
-      filter(Type %in% c("unnecessary", "unbiased", "unintential")) %>%
+      filter(Type %in% c("unnecessary complexity", "unbiased", "unintential")) %>%
       slice_sample(n = 3)
 
     tempBankC <- bank %>%
-      filter(Type %in% c("filtering", "unnecessary", "unbiased", "unintential")) %>%
+      filter(Type %in% c("filtering", "unnecessary complexity", "unbiased", "unintential")) %>%
       filter(!(Var %in% c(tempBankA$Var, tempBankB$Var))) %>%
       slice_sample(n = 4)
 

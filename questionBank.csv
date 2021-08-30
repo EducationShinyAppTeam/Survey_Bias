@@ -9,11 +9,11 @@ filtering,var7,What is your opinion of the new health care law? A. Support B. Do
 filtering,var8,How do you feel about the current 21 year-old drinking age? A. In favor B. Not in favor
 filtering,var9,Should marijuana be legalized for sale in Pennsylvania? A. Yes B. No
 filtering,var10,What is your opinion of our current Governor? A. favorable B. Unfavorable
-deliberate,var11,It is hard for young kids born into city slums to have a bright future when they are constantly oppressed: agree or disagree or undecided?
-deliberate,var12,"Our generation, who never faced the Great Depression, will have an easier time buying a house: agree or disagee or undecided?"
-deliberate,var13,Education will face challenges in the upcoming years with Betsy Devos in office: agree or disagree or undecided?
-deliberate,var14,It is difficult for college graduates to obtain a job with the current state of our country: Yes or No or undecided?
-deliberate,var15,"Because of their obvious effects on jobs, environmental laws should be less restrictive: agree or disagree or undecided?"
+deliberate bias,var11,It is hard for young kids born into city slums to have a bright future when they are constantly oppressed: agree or disagree or undecided?
+deliberate bias,var12,"Our generation, who never faced the Great Depression, will have an easier time buying a house: agree or disagee or undecided?"
+deliberate bias,var13,Education will face challenges in the upcoming years with Betsy Devos in office: agree or disagree or undecided?
+deliberate bias,var14,It is difficult for college graduates to obtain a job with the current state of our country: Yes or No or undecided?
+deliberate bias,var15,"Because of their obvious effects on jobs, environmental laws should be less restrictive: agree or disagree or undecided?"
 anchoring,var16,"Knowing that Michael Phelps has won 28 medals, who is the best athlete of all time?"
 anchoring,var17,"Keeping in mind that Qatar is the richest country in the world, where would you want to vacation?"
 anchoring,var18,"With McDonalds serving over more than 700 million customers each day, what is the most popular fast food joint?"
@@ -24,11 +24,11 @@ unintentional,var22,Do you believe that all women should always be given free ta
 unintentional,var23,Do you believe that we should ban smoking cigarettes?
 unintentional,var24,Should younger kids be forbidden from watching R rated movies even at their parents discretion?
 unintentional,var25,Should minors with underage offenses be banned from getting their license until they are 21?
-unnecessary,var26,Do you think that our country should increase funding for our military or for our education?
-unnecessary,var27,Do we not have the right to freedom of speech?
-unnecessary,var28,Does it seem possible or does it seem impossible to you that the Nazi extermination of the Jews never happened?
-unnecessary,var29,Please indicate if you agree or disagree: I feel welcome by the staff and by the youth at the center.
-unnecessary,var30,Please indicate if you agree or disagree: Children with obesity and children with diabetes should be separated at school lunches.
+unnecessary complexity,var26,Do you think that our country should increase funding for our military or for our education?
+unnecessary complexity,var27,Do we not have the right to freedom of speech?
+unnecessary complexity,var28,Does it seem possible or does it seem impossible to you that the Nazi extermination of the Jews never happened?
+unnecessary complexity,var29,Please indicate if you agree or disagree: I feel welcome by the staff and by the youth at the center.
+unnecessary complexity,var30,Please indicate if you agree or disagree: Children with obesity and children with diabetes should be separated at school lunches.
 unbiased,var31,What is your opinion on the Black Lives Matter movement? A. In favor B. Not in Favor C. Undecided/No Opinion
 unbiased,var32,"In your opinion, who is the best men's soccer player?"
 unbiased,var33,Which should we increase funding on: A. Healthcare B. Education C. Neither D. Both
