@@ -263,11 +263,11 @@ ui <- list(
                     collapsible = TRUE,
                     collapsed = TRUE,
                     width = 12,
-                    p("A question is unnecessarily complex is composed of two or
-                      more separate issues or topics, but which can only have one
-                      answer. We call this type of complex question a
-                      Double-barreled Question. Consider the bias example below
-                      then reveal the correct wording."),
+                    p("One way a question can be unnecessarily complex is if it
+                      is composed of two or more separate issues or topics. We
+                      call this type of complex question a ",
+                      tags$em("Double-barrled Question"), ". Consider the bias
+                      example below then reveal the improved wording."),
                     br(),
                     p("Problematic Example:",
                       br(),
@@ -1067,7 +1067,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$fixDoubleBarrel, {
     output$doubleBarrelExample <- renderText({
-      "Who should have priority in receiving the smallpox vaccination?
+      "Who should have priority in receiving the COVID-19 vaccination?
       a. health care workers
       b. military personnel
       c. both health care workers and military personnel
