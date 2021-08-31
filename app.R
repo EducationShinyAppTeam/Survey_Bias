@@ -284,7 +284,7 @@ ui <- list(
                     br(), br(),
                     p(
                       class = "answertext",
-                      tags$strong(textOutput("doubleBarrelExample", inline = TRUE))
+                      tags$strong(uiOutput("doubleBarrelExample", inline = TRUE))
                     )
                   )
                 ),
@@ -1065,15 +1065,22 @@ server <- function(input, output, session) {
     })
   })
 
-  observeEvent(input$fixDoubleBarrel, {
-    output$doubleBarrelExample <- renderText({
-      "Who should have priority in receiving the COVID-19 vaccination?
-      a. health care workers
-      b. military personnel
-      c. both health care workers and military personnel
-      d. neither"
-    })
-  })
+  observeEvent(
+    eventExpr = input$fixDoubleBarrel,
+    handlerExpr = {
+      output$doubleBarrelExample <- renderUI({
+        p("Who should have priority in receiving the COVID-19 vaccination?",
+          tags$ol(
+            type = "a",
+            tags$li("Health care workers"),
+            tags$li("Military personnel"),
+            tags$li("Both health care workers and military personnel"),
+            tags$li("Neither")
+          )
+        )
+      })
+    }
+  )
 
   observeEvent(input$fixDoubleNeg, {
     output$doubleNegExample <- renderText({
