@@ -58,8 +58,6 @@ ui <- list(
           p("The goal of this app is to illustrate the different types of biases
             that occur in the wording of survey questions."),
           h2("Instructions"),
-          p("On the first page, simply click below each question that contains a
-            bias to see what that bias is."),
           tags$ul(
             tags$li("On the first page, simply click below each question that
                     contains a bias to see what that bias is."),
@@ -405,8 +403,8 @@ ui <- list(
             tabPanel(
               title = "Directions",
               p("This is a three level game to test if you can recognize the
-                types of biases described in this app. Each level will consist of
-                4 questions that contain a bias. Match the question with the bias
+                types of biases described in this app. The first and second level would consist of 3 questions each while
+                the third level would contain 4 questions which contain a bias. Match the question with the bias
                 that it contains. As the levels get harder, some questions will
                 contain multiple biases; in these cases you should select the most
                 prevelant bias."),
