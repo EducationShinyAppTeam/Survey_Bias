@@ -8,14 +8,16 @@ Authors@R: c(
     person(given = "Xigang", family = "Zhang", role = c("ctb")),
     person(given = "Chense", family = "Gray", role = c("aut")),
     person(given = "Dennis", family = "Pearl", role = c("aut")),
-    person(given = "Dennis", family = "Hatfield", role = c("aut"))
+    person(given = "Neil", family = "Hatfield", role = c("aut"))
   )
 Chapter: Data Gathering
 Description: This app is focused on learning about common types of biased wording in survey samples (deliberate bias; filtering; anchoring; unintentional bias; unnecessary complexity; and asking the uninformed).
-LearningObjectives: c()
+LearningObjectives: c(
+    "The student will learn to recognize different types of bias in survey questions."
+  )
 DisplayMode: Normal
 URL: https://psu-eberly.shinyapps.io/Survey_Bias
 BugReports: https://github.com/EducationShinyAppTeam/Survey_Bias/issues
 License: CC-BY-NC-SA-4.0
-Tags: game, simulation
+Tags: game, multilevel, quiz
 Type: Shiny

@@ -1,8 +1,8 @@
 # Things Needed for This Version
-1. Remove extra buttons from Explore page
-2. Remove timer
-3. Is Explore page actually an Exploration or an Example page?
-4. Do we need a prereq's page? (issue #11)
+1. Remove extra buttons from Explore page √
+2. Remove timer √
+3. Is Explore page actually an Exploration or an Example page? √
+4. Do we need a prereq's page? (issue #11) In progress
 5. Add hints, feedback, and partially correct (needs updated questionBank)
 6. Set limit on attempts
   a. first attempt
@@ -12,12 +12,14 @@
 8. Scores
   a. Track both first and last attempt
   b. Update final score page
-9. Add progress bar for game?
-10. DRY code (issue #2)
-11. Fix instructions (issue #10)
-12. Fix Game options to differentiate double barrelled and double negatives (issue #7)
-13. Check all aspects of app (issue #4)
-14. Fix name issue (issue #5)
+9. DRY code (issue #2)
+10. Fix instructions (issue #10)
+11. Fix Game options to differentiate double barrelled and double negatives (issue #7)
+12. Check all aspects of app (issue #4) In Progress
+13. Fix name issue (issue #5)
 
 # Ideas for Future Development
+- Add progress bar for game?
 - Other types of feedback for user, e.g., most missed biased (issue #9)
+- Add page aware info button
+- Decide what to do with the importance of order graphic (extra file)

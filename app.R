@@ -1,8 +1,11 @@
-# Load Packages
-library(dplyr)
-library(boastUtils)
+# Load Packages ----
+library(shiny)
+library(shinydashboard)
 library(shinyBS)
 library(shinyWidgets)
+library(boastUtils)
+library(dplyr)
+
 
 # Load additional dependencies and setup functions ----
 bank <- read.csv("questionBank.csv", stringsAsFactors = FALSE, header = TRUE)
@@ -10,12 +13,11 @@ choicesA <- c("Select Answer", "filtering", "deliberate bias", "anchoring")
 choicesB <- c("Select Answer", "unnecessary complexity", "unbiased", "unintentional bias")
 choicesC <- c("Select Answer", "filtering", "unnecessary complexity", "unbiased", "unintentional bias")
 
-# Define UI for App
+# Set up UI ----
 ui <- list(
-  ## Create the app page
   dashboardPage(
     skin = "red",
-    ### Create the app header
+    ## Header ----
     dashboardHeader(
       title = "Survey Question Bias",
       titleWidth = 250,
@@ -32,27 +34,28 @@ ui <- list(
         )
       )
     ),
-    ### Create the sidebar/left navigation menu
+    ## Sidebar ----
     dashboardSidebar(
       sidebarMenu(
         id = "pages",
         width = 250,
-        menuItem("Overview", tabName = "Overview", icon = icon("tachometer-alt")),
-        menuItem("Explore", tabName = "Explore", icon = icon("wpexplorer")),
+        menuItem("Overview", tabName = "overview", icon = icon("gauge-high")),
+        menuItem("Prequisites???", tabName = "prereqs", icon = icon("book")),
+        menuItem("Examples", tabName = "examples", icon = icon("book-open-reader")),
         menuItem("Game", tabName = "Game", icon = icon("gamepad")),
         menuItem("References", tabName = "References", icon = icon("leanpub"))
       ),
       tags$div(
         class = "sidebar-logo",
-        boastUtils::psu_eberly_logo("reversed")
+        boastUtils::sidebarFooter()
       )
     ),
-    ### Create the content
+    ## Body ----
     dashboardBody(
       tabItems(
-        #### Set up the Overview Page ----
+        ### Overview ----
         tabItem(
-          tabName = "Overview",
+          tabName = "overview",
           withMathJax(),
           h1("Survey Question Wording Bias"),
           p("The goal of this app is to illustrate the different types of biases
@@ -71,7 +74,6 @@ ui <- list(
                     overlap.  So while one may seem fitting, it could be marked
                     incorrect if there is a more dominant bias.")
           ),
-          ##### Go Button--location will depend on your goals
           div(
             style = "text-align: center;",
             bsButton(
@@ -98,14 +100,15 @@ ui <- list(
             div(class = "updated", "Last Update: 8/30/2021 by NJH.")
           )
         ),
-        #### Set up the Explore Page ----
+        ### Examples Page ----
         tabItem(
-          tabName = "Explore",
+          tabName = "examples",
           withMathJax(),
-          h2("Explore Types of Survey Wording Bias"),
+          h2("Types of Survey Wording Bias"),
+          br(),
           tabsetPanel(
             type = "tabs",
-            ### Bias Examples tab ----
+            #### Bias Examples tab ----
             tabPanel(
               title = "Wording Bias",
               br(),
@@ -114,7 +117,7 @@ ui <- list(
                 surveys may seem easy to create, there are some common pitfalls
                 in question wording to watch out for. Expand the boxes below to
                 see an example of each."),
-              ### Row 1 ----
+              ##### Row 1 ----
               fluidRow(
                 column(
                   width = 6,
@@ -128,20 +131,21 @@ ui <- list(
                       specific cause or opinion. Consider the bias example below
                       then reveal the correct wording."),
                     br(),
-                    p("Problematic Example:",
-                      br(),
+                    p("Problematic Example:", br(),
                       "It is hard for today's college graduates to have a bright
                       future with the way things are today in the world.
                       Agree or Disagree?"
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     bsButton(
                       inputId = "fixDeliberateBias",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     p(
                       class = "answertext",
                       tags$strong(textOutput("deliberateExample", inline = TRUE))
@@ -160,8 +164,7 @@ ui <- list(
                       list of possible answers. Consider the bias example below
                       then reveal the correct wording."),
                     br(),
-                    p("Problematic Example:",
-                      br(),
+                    p("Problematic Example:", br(),
                       "What is your opinion of our current President?",
                       tags$ol(
                         type = "a",
@@ -169,14 +172,16 @@ ui <- list(
                         tags$li("Unfavorable")
                       )
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     bsButton(
                       inputId = "fixFiltering",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     p(
                       class = "answertext",
                       tags$strong(uiOutput("filteringExample", inline = TRUE))
@@ -184,7 +189,7 @@ ui <- list(
                   )
                 )
               ),
-              ### Row 2 ----
+              ##### Row 2 ----
               fluidRow(
                 column(
                   width = 6,
@@ -199,19 +204,20 @@ ui <- list(
                       distracted by the anchor. Consider the bias example below
                       then reveal the correct wording."),
                     br(),
-                    p("Problematic Example:",
-                      br(),
+                    p("Problematic Example:", br(),
                       "Knowing that the population of the U.S. is 316 million,
                       what is the population of Canada?"
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     bsButton(
                       inputId = "fixAnchoring",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     p(
                       class = "answertext",
                       tags$strong(textOutput("anchoringExample", inline = TRUE))
@@ -221,7 +227,7 @@ ui <- list(
                 column(
                   width = 6,
                   box(
-                    title = "Unintential Bias",
+                    title = "Unintentional Bias",
                     collapsible = TRUE,
                     collapsed = TRUE,
                     width = 12,
@@ -233,28 +239,29 @@ ui <- list(
                       Consider the bias example below then reveal the correct
                       wording."),
                     br(),
-                    p("Problematic Example:",
-                      br(),
+                    p("Problematic Example:", br(),
                       "Do you favor or oppose an ordinance that ",
-                      tags$em("forbids"),
-                      " surveillance cameras to be placed on Beaver Ave?",
+                      tags$em("forbids"), " surveillance cameras to be placed on
+                      Beaver Ave?",
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     bsButton(
-                      inputId = "fixUnintential",
+                      inputId = "fixUnintentional",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     p(
                       class = "answertext",
-                      tags$strong(textOutput("unintentialExample", inline = TRUE))
+                      tags$strong(textOutput("unintentionalExample", inline = TRUE))
                     )
                   )
                 )
               ),
-              ### Row 3 ----
+              ##### Row 3 ----
               fluidRow(
                 column(
                   width = 6,
@@ -269,19 +276,20 @@ ui <- list(
                       tags$em("Double-barrled Question"), ". Consider the bias
                       example below then reveal the improved wording."),
                     br(),
-                    p("Problematic Example:",
-                      br(),
+                    p("Problematic Example:", br(),
                       "Do you think that health care workers and military personnel
                       should be the first to receive the COVID-19 vaccination?"
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     bsButton(
                       inputId = "fixDoubleBarrel",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     p(
                       class = "answertext",
                       tags$strong(uiOutput("doubleBarrelExample", inline = TRUE))
@@ -302,20 +310,21 @@ ui <- list(
                       really asking. Consider the bias example below then reveal
                       the correct wording."),
                     br(),
-                    p("Problematic Example:",
-                      br(),
+                    p("Problematic Example:", br(),
                       "Do you disagree that obese children should not be allowed
                       to spend a lot of time watching television, playing computer
                       games, or listening to music?",
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     bsButton(
                       inputId = "fixDoubleNeg",
                       label = "Remove the bias!",
                       style = "default",
                       size = "large"
                     ),
-                    br(), br(),
+                    br(),
+                    br(),
                     p(
                       class = "answertext",
                       tags$strong(textOutput("doubleNegExample", inline = TRUE))
@@ -324,17 +333,10 @@ ui <- list(
                 )
               )
             ),
-            ## Did you know tab ----
+            #### Did you know tab ----
             tabPanel(
               title = "Did you know...",
               br(),
-              img(
-                src = 'truman.png',
-                align = "right",
-                height = '50%',
-                width = '50%',
-                alt = "Truman holds paper with headline he lost when he won"
-              ),
               p("For the 1948 election between Thomas Dewey and Harry Truman,
                 Gallup conducted a poll with a sample size of about 3250. Each
                 individual in the sample was interviewed in person by a
@@ -357,6 +359,18 @@ ui <- list(
                 of the election turned out to be almost exactly reversed: 50% for
                 Truman, 45% for Dewey, and 5% for third-party candidates."
               ),
+              tags$figure(
+                class = "centerFigure",
+                tags$img(
+                  src = 'truman.jpg',
+                  height = '50%',
+                  width = '50%',
+                  alt = "Truman holds paper with headline he lost when he won"
+                ),
+                tags$figcaption("Truman holding paper falsely declaring his
+                                defeat; photo by B. Rollins.")
+              ),
+              br(),
               p("Truman's victory was a great surprise to the nation as a whole.
                 So convinced was the Chicago Tribune of Dewey's victory that it
                 went to press on its early edition for November 4, 1948 with the
@@ -365,45 +379,43 @@ ui <- list(
               p("The Gallup Poll learned the lesson that the biases of quota
                 based polling can be alleviated by using random sampling
                 techniques. Check out ",
-                tags$a(href = "http://www.gallup.com", "the Gallup Website"),
-                " to learn more."
-              )
-            )
-          ),
-          fluidRow(
-            column(
-              width = 3,
-              offset = 2,
-              bsButton(
-                inputId = "goToOverview",
-                label = "Return to Overview",
-                style = "default",
-                size = "large"
-              )
-            ),
-            column(
-              width = 3,
-              offset = 2,
-              bsButton(
-                inputId = "playGame",
-                label = "Play Wording Bias Game",
-                style = "default",
-                size = "large"
+                tags$a(href = "http://www.gallup.com", class = "bodylinks",
+                       "the Gallup Website"), " to learn more."
               )
             )
           )
         ),
-        #### Set up an Game Page ----
+        ### Game Page ----
         tabItem(
           tabName = "Game",
           withMathJax(),
           h2("Survey Bias Game"),
           tabsetPanel(
             id = "gameLevels",
-            type = "hidden",
-            ## Directions Tab ----
+            type = "tabs",
+            #### Directions Tab ----
             tabPanel(
               title = "Directions",
+              br(),
+              h3("Directions"),
+              p("There are three levels to this game. In each level, you'll need
+                to review proposed survey questions for wording biases (if any).
+                As the game progresses, some questions could contain multiple biases;
+                in these cases you'll want to select the most prevelant/impactful
+                bias. You'll have two attempts for each survey question."),
+              p("Click the Start button when you're ready to begin."),
+              div(
+                style = "text-align: center;",
+                bsButton(
+                  inputId = "go2",
+                  label = "Start",
+                  style = "default",
+                  size = "large",
+                  icon = icon("bolt")
+                )
+              ),
+              hr(),
+              h3("Old Directions"),
               p("This is a three level game to test if you can recognize the
                 types of biases described in this app. Each level will consist of
                 4 questions that contain a bias. Match the question with the bias
@@ -417,24 +429,11 @@ ui <- list(
                 finish each level. At the end of the second round, the timer
                 will stop after all answers are submitted correctly."),
               p("Are you ready? If so, press Start!"),
-              div(
-                style = "text-align: center;",
-                bsButton(
-                  inputId = "go2",
-                  label = "Start!",
-                  style = "default",
-                  size = "large",
-                  icon = icon("bolt")
-                )
-              )
             ),
-            ## Level A ----
+            #### Level A ----
             tabPanel(
               title = "Level A",
-              div(
-                style = "text-align: right;",
-                textOutput("timerA")
-              ),
+              br(),
               h3("Level A"),
               p("Select the appropriate bias for each survey question."),
               h4("Survey Question 1"),
@@ -453,6 +452,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansA1")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackA1")
                 )
               ),
               h4("Survey Question 2"),
@@ -471,6 +476,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansA2")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackA2")
                 )
               ),
               h4("Survey Question 3"),
@@ -489,6 +500,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansA3")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackA3")
                 )
               ),
               hr(),
@@ -537,19 +554,12 @@ ui <- list(
                   icon = icon("retweet"),
                   disabled = TRUE
                 )
-              ),
-              br(),
-              br(),
-              tags$strong(textOutput("scoreA")),
-              p("The maximum possible score for this level is 6 points.")
+              )
             ),
-            ## Level B ----
+            #### Level B ----
             tabPanel(
               title = "Level B",
-              div(
-                style = "text-align: right",
-                textOutput("timerB")
-              ),
+              br(),
               h3("Level B"),
               p("Select the appropriate bias for each survey question."),
               h4("Survey Question 1"),
@@ -568,6 +578,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansB1")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackB1")
                 )
               ),
               h4("Survey Question 2"),
@@ -586,6 +602,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansB2")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackB2")
                 )
               ),
               h4("Survey Question 3"),
@@ -604,6 +626,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansB3")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackB3")
                 )
               ),
               hr(),
@@ -652,19 +680,12 @@ ui <- list(
                   icon = icon("retweet"),
                   disabled = TRUE
                 )
-              ),
-              br(),
-              br(),
-              tags$strong(textOutput("scoreB")),
-              p("The maximum possible score for this level is 6 points.")
+              )
             ),
-            ## Level C ----
+            #### Level C ----
             tabPanel(
               title = "Level C",
-              div(
-                style = "text-align: right",
-                textOutput("timerC")
-              ),
+              br(),
               h3("Level C"),
               p("Select the appropriate bias for each survey question."),
               h4("Survey Question 1"),
@@ -683,6 +704,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansC1")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackC1")
                 )
               ),
               h4("Survey Question 2"),
@@ -701,6 +728,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansC2")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackC2")
                 )
               ),
               h4("Survey Question 3"),
@@ -719,6 +752,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansC3")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackC3")
                 )
               ),
               h4("Survey Question 4"),
@@ -737,6 +776,12 @@ ui <- list(
                   offset = 0,
                   br(),
                   uiOutput("ansC4")
+                ),
+                column(
+                  width = 6,
+                  offset = 0,
+                  br(),
+                  uiOutput("feedbackC4")
                 )
               ),
               hr(),
@@ -785,13 +830,9 @@ ui <- list(
                   icon = icon("retweet"),
                   disabled = TRUE
                 )
-              ),
-              br(),
-              br(),
-              tags$strong(textOutput("scoreC")),
-              p("The maximum possible score for this level is 8 points.")
+              )
             ),
-            ## Final Page ----
+            #### Final Tab ----
             tabPanel(
               title = "Final Scores",
               h3("Final Scores"),
@@ -801,45 +842,56 @@ ui <- list(
               textOutput("finalBScore"),
               textOutput("finalCScore"),
               hr(),
-              textOutput("totalScore"),
-              textOutput("finalTime")
+              textOutput("totalScore")
             )
-          )
+          ),
+          hr(),
+          p("progress bar??")
         ),
-        #### Set up the References Page----
+        ### References Page----
         tabItem(
           tabName = "References",
           withMathJax(),
           h2("References"),
           p(
             class = "hangingindent",
-            "Bailey, E. (2015). shinyBS: Twitter Bootstrap Components
-                      for Shiny. R package version 0.61. Available from
-                      https://CRAN.R-project.org/package=shinyBS"
+            "Bailey, E. (2022). shinyBS: Twitter bootstrap components for shiny.
+            (v0.61.1). [R package]. Available from https://CRAN.R-project.org/package=shinyBS"
           ),
           p(
             class = "hangingindent",
-            "Carey, R. and Hatfield, N. (2020). boastUtils: BOAST
-                      Utilities. R package version 0.1.6.2. Available from
-                      https://github.com/EducationShinyAppTeam/boastUtils"
+            "Carey, R. and Hatfield., N. J. (2023). boastUtils: BOAST utilities.
+            (v0.1.11.2). [R Package]. Available from
+            https://github.com/EducationShinyappTeam/boastUtils"
           ),
           p(
             class = "hangingindent",
-            "Chang, W. and Borges Ribeiro, B. (2018). shinydashboard:
-                      Create Dashboards with 'Shiny'. R package version 0.7.1.
-                      Available from https://CRAN.R-project.org/package=shinydashboard"
+            "Chang, W. and Borges Ribeio, B. (2021). shinydashboard: Create dashboards
+            with 'Shiny'. (v0.7.2). [R Package]. Available from
+            https://CRAN.R-project.org/package=shinydashboard"
           ),
           p(
             class = "hangingindent",
-            "Ooms, J. (2020). V8: Embedded JavaScript and WebAssembly
-                       Engine for R. R package version 3.0.2. Available from
-                       https://CRAN.R-project.org/package=V8"
+            "Chang, W., Cheng, J., Allaire, J.J., Sievert, C., Schloerke, B.,
+            Xie, Y., Allen, J., McPherson, J., Dipert, A., and Borges, B. (2022).
+            shiny: Web application framework for R. (v1.7.4). [R Package].
+            Available from https://CRAN.R-project.org/package=shiny"
           ),
           p(
             class = "hangingindent",
-            "Wickham, H., Francois, R., Henry L., and Muller K. (2020). dplyr:
-                      A Grammar of Data Manipulation for R. R package version 1.0.2. Available from
-                      https://CRAN.R-project.org/package=dplyr"
+            "Perrier, V., Meyer, F., and Granjon, D. (2023). shinyWidgets: Custom
+            inputs widgets for shiny. (v0.7.6). [R Package]. Availble from
+            https://CRAN.R-project.org/package=shinyWidgets"
+          ),
+          p(
+            class = "hangingindent",
+            "Rollins, B. (1948). Picture Harry S. Truman."
+          ),
+          p(
+            class = "hangingindent",
+            "Wickham, H., François, R., Henry, L., Müller, K., and Vaughan, D.
+            (2023). dplyr: A grammar of data manipulation. (v1.1.2). [R Package].
+            Available from https://CRAN.R-project.org/package=dplyr"
           ),
           br(),
           br(),
@@ -854,97 +906,128 @@ ui <- list(
 
 # Define server logic ----
 server <- function(input, output, session) {
-
+  ## Define score trackers ----
   scoreLevelA <- reactiveVal(0)
   scoreLevelB <- reactiveVal(0)
   scoreLevelC <- reactiveVal(0)
 
-  ## Define what each button does
-  observeEvent(input$info, {
-    sendSweetAlert(
-      session = session,
-      title = "Instructions:",
-      text = "Click buttons to see improved wordings.",
-      type = "info"
-    )
-  })
-
-  observeEvent(input$info1, {
-    sendSweetAlert(
-      session = session,
-      title = "Instructions:",
-      text = "Drag pink rectangles with questions to the correct category box.",
-      type = "info"
-    )
-  })
-
-  # Reset Button For Main Page ----
-  observeEvent(input$goToOverview, {
-    updateTabItems(
-      session = session,
-      inputId = "pages",
-      selected = "Overview"
-    )
-  })
-
-  ### go button ----
-  observeEvent(input$go1, {
-    updateTabItems(
-      session = session,
-      inputId = "pages",
-      selected = "Explore"
-    )
-  })
-
-  ### Play button ----
-  observeEvent(input$playGame, {
-    updateTabItems(
-      session = session,
-      inputId = "pages",
-      selected = "Game"
-    )
-  })
-
-  ## Timer Info ----
-  time <- reactiveValues(inc = 0, timer = reactiveTimer(1000), started = FALSE)
-  observe({
-    time$timer()
-    if (isolate(time$started)) {
-      time$inc <- isolate(time$inc) + 1
+  ## Info button ----
+  observeEvent(
+    eventExpr = input$info,
+    handlerExpr = {
+      sendSweetAlert(
+        session = session,
+        title = "Instructions",
+        text = "Click buttons to see improved wordings.",
+        type = "info"
+      )
     }
-  })
-  observeEvent(input$go2, {
-    time$started <- TRUE
-  })
-  observeEvent(input$nextA, {
-    time$started <- TRUE
-  })
-  observeEvent(input$nextB, {
-    time$started <- TRUE
-  })
+  )
 
-  ## Timer Outputs ----
-  output$timerA <- renderText({
-    paste("You have used", time$inc, "seconds.")
-  })
-  output$timerB <- renderText({
-    paste("You have used", time$inc, "seconds.")
-  })
-  output$timerC <- renderText({
-    paste("You have used", time$inc, "seconds.")
-  })
-  output$finalTime <- renderText({
-    paste("You used a total of ", time$inc, "seconds.")
-  })
+  ## Go button ----
+  observeEvent(
+    eventExpr = input$go1,
+    handlerExpr = {
+      updateTabItems(
+        session = session,
+        inputId = "pages",
+        selected = "examples"
+      )
+    }
+  )
 
-  ###### Back and Forth Buttons ----
-  observeEvent(input$go2, {
-    updateTabsetPanel(
-      session = session,
-      inputId = "gameLevels",
-      selected = "Level A")
-  })
+  ## Examples Page Buttons ----
+  ### Deliberate bias ----
+  observeEvent(
+    eventExpr = input$fixDeliberateBias,
+    handlerExpr = {
+      output$deliberateExample <- renderText({
+        "Do you agree or disagree that it is hard for today's college graduates
+        to have a bright future?"
+      })
+    }
+  )
 
+  ### Filtering bias ----
+  observeEvent(
+    eventExpr = input$fixFiltering,
+    handlerExpr = {
+      output$filteringExample <- renderUI({
+        p("What is your opinion of our current President?",
+          tags$ol(
+            type = "a",
+            tags$li("Favorable"),
+            tags$li("Unfavorable"),
+            tags$li("Undecided")
+          )
+        )
+      })
+    }
+  )
+
+  ### Anchoring bias ----
+  observeEvent(
+    eventExpr = input$fixAnchoring,
+    handlerExpr = {
+      output$anchoringExample <- renderText({
+        "What is the population of Canada?"
+      })
+    }
+  )
+
+  ### Unintentional bias ----
+  observeEvent(
+    eventExpr = input$fixUnintentional,
+    handlerExpr = {
+      output$unintentionalExample <- renderText({
+        "Do you favor or oppose an ordinance that does not allow surveillance
+        cameras to be placed on Beaver Avenue?"
+      })
+    }
+  )
+
+  ### Double barrel ----
+  observeEvent(
+    eventExpr = input$fixDoubleBarrel,
+    handlerExpr = {
+      output$doubleBarrelExample <- renderUI({
+        p("Who should have priority in receiving the COVID-19 vaccination?",
+          tags$ol(
+            type = "a",
+            tags$li("Health care workers"),
+            tags$li("Military personnel"),
+            tags$li("Both health care workers and military personnel"),
+            tags$li("Neither")
+          )
+        )
+      })
+    }
+  )
+
+  ### Double negative ----
+  observeEvent(
+    eventExpr = input$fixDoubleNeg,
+    handlerExpr = {
+      output$doubleNegExample <- renderText({
+        "Do you agree or disagree that children who have a Body Mass Index (BMI)
+        at or above the 95th percentile should spend less time watching
+        television, playing computer games, and listening to music?"
+      })
+    }
+  )
+
+  ## Start Game button ----
+  observeEvent(
+    eventExpr = input$go2,
+    handlerExpr = {
+      updateTabsetPanel(
+        session = session,
+        inputId = "gameLevels",
+        selected = "Level A")
+    }
+  )
+
+  ## Game Navigation ----
   observeEvent(input$nextA, {
     if(scoreLevelA() == 6) {
       updateTabsetPanel(
@@ -1013,81 +1096,6 @@ server <- function(input, output, session) {
       session = session,
       inputId = "gameLevels",
       selected = "Level B")
-  })
-
-  # Exploration Page ----
-  observeEvent(input$fixDeliberateBias, {
-    output$deliberateExample <- renderText({
-      "Do you agree or disagree that it is hard
-      for today's college graduates to have a bright future?"
-    })
-  })
-
-  observeEvent(input$fixFiltering, {
-    output$filteringExample <- renderUI({
-      p("What is your opinion of our current President?",
-        tags$ol(
-          type = "a",
-          tags$li("Favorable"),
-          tags$li("Unfavorable"),
-          tags$li("Undecided")
-        ))
-    })
-  })
-
-  # observeEvent(input$runif2, {
-  #   output$myImage <- renderImage({
-  #     output$myImage <- renderImage(
-  #       {
-  #         image_file <- paste("www/", input$image.type, ".png", sep = "")
-  #         return(list(
-  #           src = image_file,
-  #           filetype = "importanceoforder.png",
-  #           height = 250,
-  #           width = 500
-  #         ))
-  #       },
-  #       deleteFile = FALSE
-  #     )
-  #   })
-  # })
-
-  observeEvent(input$fixAnchoring, {
-    output$anchoringExample <- renderText({
-      "What is the population of Canada?"
-    })
-  })
-
-  observeEvent(input$fixUnintential, {
-    output$unintentialExample <- renderText({
-      "Do you favor or oppose an ordinance that does not allow
-      surveillance cameras to be placed on Beaver Avenue?"
-    })
-  })
-
-  observeEvent(
-    eventExpr = input$fixDoubleBarrel,
-    handlerExpr = {
-      output$doubleBarrelExample <- renderUI({
-        p("Who should have priority in receiving the COVID-19 vaccination?",
-          tags$ol(
-            type = "a",
-            tags$li("Health care workers"),
-            tags$li("Military personnel"),
-            tags$li("Both health care workers and military personnel"),
-            tags$li("Neither")
-          )
-        )
-      })
-    }
-  )
-
-  observeEvent(input$fixDoubleNeg, {
-    output$doubleNegExample <- renderText({
-      "Do you agree or disagree that children who
-      have a Body Mass Index (BMI) at or above the 95th percentile should spend
-less time watching television, playing computer games, and listening to music?"
-    })
   })
 
   ## Game Server Logic ----
@@ -1484,11 +1492,11 @@ less time watching television, playing computer games, and listening to music?"
       slice_sample(n = 3)
 
     tempBankB <- bank %>%
-      filter(Type %in% c("unnecessary complexity", "unbiased", "unintential")) %>%
+      filter(Type %in% c("unnecessary complexity", "unbiased", "unintentional")) %>%
       slice_sample(n = 3)
 
     tempBankC <- bank %>%
-      filter(Type %in% c("filtering", "unnecessary complexity", "unbiased", "unintential")) %>%
+      filter(Type %in% c("filtering", "unnecessary complexity", "unbiased", "unintentional")) %>%
       filter(!(Var %in% c(tempBankA$Var, tempBankB$Var))) %>%
       slice_sample(n = 4)
 
@@ -1557,6 +1565,24 @@ less time watching television, playing computer games, and listening to music?"
   output$totalScore <- renderText({
     paste("Your total score is", scoreLevelA() + scoreLevelB() + scoreLevelC(), ".")
   })
+
+  ## Old scape code? ----
+  # observeEvent(input$runif2, {
+  #   output$myImage <- renderImage({
+  #     output$myImage <- renderImage(
+  #       {
+  #         image_file <- paste("www/", input$image.type, ".png", sep = "")
+  #         return(list(
+  #           src = image_file,
+  #           filetype = "importanceoforder.png",
+  #           height = 250,
+  #           width = 500
+  #         ))
+  #       },
+  #       deleteFile = FALSE
+  #     )
+  #   })
+  # })
 }
 
 # Create Shiny App using BOAST App template
