@@ -13,7 +13,7 @@
   a. Track both first and last attempt
   b. Update final score page
 9. DRY code (issue #2)
-10. Fix instructions (issue #10)
+10. Fix instructions (issue #10) √
 11. Fix Game options to differentiate double barrelled and double negatives (issue #7)
 12. Check all aspects of app (issue #4) In Progress
 13. Fix name issue (issue #5)
