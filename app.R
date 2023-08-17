@@ -5,6 +5,7 @@ library(shinyBS)
 library(shinyWidgets)
 library(boastUtils)
 library(dplyr)
+library(DT)
 
 
 # Load additional dependencies and setup functions ----
@@ -42,7 +43,7 @@ ui <- list(
         menuItem("Overview", tabName = "overview", icon = icon("gauge-high")),
         menuItem("Prequisites???", tabName = "prereqs", icon = icon("book")),
         menuItem("Examples", tabName = "examples", icon = icon("book-open-reader")),
-        menuItem("Game", tabName = "Game", icon = icon("gamepad")),
+        menuItem("Game", tabName = "game", icon = icon("gamepad")),
         menuItem("References", tabName = "References", icon = icon("leanpub"))
       ),
       tags$div(
@@ -97,7 +98,7 @@ ui <- list(
             boastUtils::citeApp(),
             br(),
             br(),
-            div(class = "updated", "Last Update: 8/30/2021 by NJH.")
+            div(class = "updated", "Last Update: 8/17/2023 by NJH.")
           )
         ),
         ### Examples Page ----
@@ -387,12 +388,12 @@ ui <- list(
         ),
         ### Game Page ----
         tabItem(
-          tabName = "Game",
+          tabName = "game",
           withMathJax(),
           h2("Survey Bias Game"),
           tabsetPanel(
             id = "gameLevels",
-            type = "tabs",
+            type = "hidden",
             #### Directions Tab ----
             tabPanel(
               title = "Directions",
@@ -413,22 +414,7 @@ ui <- list(
                   size = "large",
                   icon = icon("bolt")
                 )
-              ),
-              hr(),
-              h3("Old Directions"),
-              p("This is a three level game to test if you can recognize the
-                types of biases described in this app. Each level will consist of
-                4 questions that contain a bias. Match the question with the bias
-                that it contains. As the levels get harder, some questions will
-                contain multiple biases; in these cases you should select the most
-                prevelant bias."),
-              p("There is a timer that will start as soon as you begin the game.
-                For each question you get wrong, you will be deducted 2 points
-                and each question you get right, you will be awarded 2 points.
-                In order to move from level to level, you will need to fully
-                finish each level. At the end of the second round, the timer
-                will stop after all answers are submitted correctly."),
-              p("Are you ready? If so, press Start!"),
+              )
             ),
             #### Level A ----
             tabPanel(
@@ -516,7 +502,8 @@ ui <- list(
                     inputId = "prevA",
                     label = "Previous",
                     style = "default",
-                    size = "large"
+                    size = "large",
+                    icon = icon("backward")
                   )
                 ),
                 column(
@@ -540,19 +527,9 @@ ui <- list(
                     label = "Next",
                     style = "default",
                     size = "large",
+                    icon = icon("forward"),
                     disabled = TRUE
                   )
-                )
-              ),
-              div(
-                style = "text-align: center;",
-                bsButton(
-                  inputId = "reattemptA",
-                  label = "Reattempt",
-                  style = "default",
-                  size = "large",
-                  icon = icon("retweet"),
-                  disabled = TRUE
                 )
               )
             ),
@@ -642,7 +619,8 @@ ui <- list(
                     inputId = "prevB",
                     label = "Previous",
                     style = "default",
-                    size = "large"
+                    size = "large",
+                    icon = icon("backward")
                   )
                 ),
                 column(
@@ -666,19 +644,9 @@ ui <- list(
                     label = "Next",
                     style = "default",
                     size = "large",
+                    icon = icon("forward"),
                     disabled = TRUE
                   )
-                )
-              ),
-              div(
-                style = "text-align: center;",
-                bsButton(
-                  inputId = "reattemptB",
-                  label = "Reattempt",
-                  style = "default",
-                  size = "large",
-                  icon = icon("retweet"),
-                  disabled = TRUE
                 )
               )
             ),
@@ -792,7 +760,8 @@ ui <- list(
                     inputId = "prevC",
                     label = "Previous",
                     style = "default",
-                    size = "large"
+                    size = "large",
+                    icon = icon("backward")
                   )
                 ),
                 column(
@@ -816,19 +785,9 @@ ui <- list(
                     label = "Next",
                     style = "default",
                     size = "large",
+                    icon = icon("forward"),
                     disabled = TRUE
                   )
-                )
-              ),
-              div(
-                style = "text-align: center;",
-                bsButton(
-                  inputId = "reattemptC",
-                  label = "Reattempt",
-                  style = "default",
-                  size = "large",
-                  icon = icon("retweet"),
-                  disabled = TRUE
                 )
               )
             ),
@@ -838,15 +797,32 @@ ui <- list(
               h3("Final Scores"),
               p("Congratulations on finishing the game!"),
               br(),
-              textOutput("finalAScore"),
-              textOutput("finalBScore"),
-              textOutput("finalCScore"),
-              hr(),
-              textOutput("totalScore")
+              DT::dataTableOutput(outputId = "finalScores"),
+              br(),
+              fluidRow(
+                column(
+                  width = 2,
+                  offset = 0,
+                  bsButton(
+                    inputId = "prevScores",
+                    label = "Previous",
+                    icon = icon("backward"),
+                    size = "large"
+                  )
+                ),
+                column(
+                  width = 2,
+                  offset = 3,
+                  bsButton(
+                    inputId = "newGame",
+                    label = "Play Again",
+                    icon = icon("retweet"),
+                    size = "large"
+                  )
+                )
+              )
             )
-          ),
-          hr(),
-          p("progress bar??")
+          )
         ),
         ### References Page----
         tabItem(
@@ -893,6 +869,12 @@ ui <- list(
             (2023). dplyr: A grammar of data manipulation. (v1.1.2). [R Package].
             Available from https://CRAN.R-project.org/package=dplyr"
           ),
+          p(
+            class = "hangingindent",
+            "Xie, Y., Cheng, J., and Tan, X. (2023). DT: A wrapper of the
+            JavaScript library 'DataTables'. (v0.28). [R Package]. Available 
+            from https://CRAN.R-project.org/package=DT"
+          ),
           br(),
           br(),
           br(),
@@ -906,19 +888,37 @@ ui <- list(
 
 # Define server logic ----
 server <- function(input, output, session) {
-  ## Define score trackers ----
-  scoreLevelA <- reactiveVal(0)
-  scoreLevelB <- reactiveVal(0)
-  scoreLevelC <- reactiveVal(0)
+  ## Define player trackers ----
+  playerScores <- reactiveValues(
+    intLevelA = 0,
+    intLevelB = 0,
+    intLevelC = 0,
+    finalLevelA = 0,
+    finalLevelB = 0,
+    finalLevelC = 0,
+    aAttempts = 0,
+    bAttempts = 0,
+    cAttempts = 0
+  )
+  
+  playerBank <- reactiveVal(NULL, label = "Player Question Bank")
 
   ## Info button ----
   observeEvent(
     eventExpr = input$info,
     handlerExpr = {
+      message <- switch(
+        EXPR = input$pages,
+        examples = "Click buttons to see improved wordings.",
+        game = "Test your understanding by identifying the type of bias in the
+        displayed survey question. You have two attempts for each level.",
+        "Use the app to explore different ways in which bias can show up in the
+        wording of survey questions."
+      )
       sendSweetAlert(
         session = session,
         title = "Instructions",
-        text = "Click buttons to see improved wordings.",
+        text = message,
         type = "info"
       )
     }
@@ -1016,10 +1016,62 @@ server <- function(input, output, session) {
     }
   )
 
-  ## Start Game button ----
+  ## Starting the Game ----
   observeEvent(
     eventExpr = input$go2,
     handlerExpr = {
+      ### Generate Questions ----
+      tempBankA <- bank %>%
+        filter(Type %in% c("filtering", "deliberate bias", "anchoring")) %>%
+        slice_sample(n = 3)
+      
+      tempBankB <- bank %>%
+        filter(Type %in% c("unnecessary complexity", "unbiased", "unintentional")) %>%
+        slice_sample(n = 3)
+      
+      tempBankC <- bank %>%
+        filter(Type %in% c("filtering", "unnecessary complexity", "unbiased",
+                           "unintentional")) %>%
+        filter(!(qID %in% c(tempBankA$QID, tempBankB$qID))) %>%
+        slice_sample(n = 4)
+      
+      playerBank(rbind(tempBankA, tempBankB, tempBankC))
+      
+      ### Render Question Text ----
+      output$questionA1 <- renderText({
+        playerBank()[1, "Survey.Question"]
+      })
+      output$questionA2 <- renderText({
+        playerBank()[2, "Survey.Question"]
+      })
+      output$questionA3 <- renderText({
+        playerBank()[3, "Survey.Question"]
+      })
+      
+      output$questionB1 <- renderText({
+        playerBank()[4, "Survey.Question"]
+      })
+      output$questionB2 <- renderText({
+        playerBank()[5, "Survey.Question"]
+      })
+      output$questionB3 <- renderText({
+        playerBank()[6, "Survey.Question"]
+      })
+      
+      output$questionC1 <- renderText({
+        playerBank()[7, "Survey.Question"]
+      })
+      output$questionC2 <- renderText({
+        playerBank()[8, "Survey.Question"]
+      })
+      output$questionC3 <- renderText({
+        playerBank()[9, "Survey.Question"]
+      })
+      output$questionC4 <- renderText({
+        playerBank()[10, "Survey.Question"]
+      })
+      
+      ### Move to Level A ----
       updateTabsetPanel(
         session = session,
         inputId = "gameLevels",
@@ -1027,562 +1079,435 @@ server <- function(input, output, session) {
     }
   )
 
-  ## Game Navigation ----
-  observeEvent(input$nextA, {
-    if(scoreLevelA() == 6) {
+  
+  ## Scoring Level A ----
+  observeEvent(
+    eventExpr = input$submitA,
+    handlerExpr = {
+      ### Alert for Non-answers ----
+      if (any(input$qA1 == "Select Answer", input$qA2 == "Select Answer",
+              input$qA3 == "Select Answer")) {
+        sendSweetAlert(
+          session = session,
+          title = "Answer Questions",
+          text = "Try identifying the type of bias for all survey questions.",
+          type = "warning"
+        )
+      } else {
+        ### Iterate Attempts ----
+        playerScores$aAttempts <- playerScores$aAttempts + 1
+        
+        ### Question A1 ----
+        if (input$qA1 == playerBank()[1, "Type"]) {
+          output$ansA1 <- renderIcon("correct")
+          output$feedbackA1 <- renderUI({"Congrats!"})
+          if (playerScores$aAttempts <= 1) {
+            playerScores$intLevelA <- playerScores$intLevelA + 1
+          } else {
+            playerScores$finalLevelA <- playerScores$finalLevelA + 1
+          }
+        } else {
+          output$ansA1 <- renderIcon("incorrect")
+        }
+        if (playerScores$aAttempts >= 2) {
+          output$feedbackA1 <- renderUI({playerBank()[1, "Feedback"]})
+        }
+        
+        ### Question A2 ----
+        if (input$qA2 == playerBank()[2, "Type"]) {
+          output$ansA2 <- renderIcon("correct")
+          output$feedbackA2 <- renderUI({"Congrats!"})
+          if (playerScores$aAttempts <= 1) {
+            playerScores$intLevelA <- playerScores$intLevelA + 1
+          } else {
+            playerScores$finalLevelA <- playerScores$finalLevelA + 1
+          }
+        } else {
+          output$ansA2 <- renderIcon("incorrect")
+        }
+        if (playerScores$aAttempts >= 2) {
+          output$feedbackA2 <- renderUI({playerBank()[2, "Feedback"]})
+        }
+        
+        ### Question A3 ----
+        if (input$qA3 == playerBank()[3, "Type"]) {
+          output$ansA3 <- renderIcon("correct")
+          output$feedbackA3 <- renderUI({"Congrats!"})
+          if (playerScores$aAttempts <= 1) {
+            playerScores$intLevelA <- playerScores$intLevelA + 1
+          } else {
+            playerScores$finalLevelA <- playerScores$finalLevelA + 1
+          }
+        } else {
+          output$ansA3 <- renderIcon("incorrect")
+        }
+        if (playerScores$aAttempts >= 2) {
+          output$feedbackA3 <- renderUI({playerBank()[3, "Feedback"]})
+        }
+        
+        if (playerScores$intLevelA == 3) {playerScores$finalLevelA <- 3}
+        ### Alter Buttons ----
+        if (playerScores$finalLevelA == 3 || playerScores$aAttempts >= 2) {
+          updateButton(
+            session = session,
+            inputId = "nextA",
+            disabled = FALSE
+          )
+          updateButton(
+            session = session,
+            inputId = "submitA",
+            disabled = TRUE
+          )
+        }
+        
+      }
+    }
+  )
+  
+  ### Move to Level B ----
+  observeEvent(
+    eventExpr = input$nextA,
+    handlerExpr = {
       updateTabsetPanel(
         session = session,
         inputId = "gameLevels",
-        selected = "Level B")
-    } else {
-      sendSweetAlert(
-        session = session,
-        title = "Try Again",
-        text = "You need to achieve the max score before moving on.",
-        type = "warning"
+        selected = "Level B"
       )
     }
-  })
-
-  observeEvent(input$nextB, {
-    if(scoreLevelB() == 6) {
+  )
+  
+  ## Scoring Level B ----
+  observeEvent(
+    eventExpr = input$submitB,
+    handlerExpr = {
+      ### Alter for Non-answers ----
+      if (any(input$qB1 == "Select Answer", input$qB2 == "Select Answer",
+              input$qB3 == "Select Answer")) {
+        sendSweetAlert(
+          session = session,
+          title = "Answer Questions",
+          text = "Try identifying the type of bias for all survey questions.",
+          type = "warning"
+        )
+      } else {
+        ### Iterate Attempts ----
+        playerScores$bAttempts <- playerScores$bAttempts + 1
+        
+        ### Question B1 ----
+        if (input$qB1 == playerBank()[4, "Type"]) {
+          output$ansB1 <- renderIcon("correct")
+          output$feedbackB1 <- renderUI({"Congrats!"})
+          if (playerScores$bAttempts <= 1) {
+            playerScores$intLevelB <- playerScores$intLevelB + 1
+          } else {
+            playerScores$finalLevelB <- playerScores$finalLevelB + 1
+          }
+        } else {
+          output$ansB1 <- renderIcon("incorrect")
+        }
+        if (playerScores$bAttempts >= 2) {
+          output$feedbackB1 <- renderUI({playerBank()[4, "Feedback"]})
+        }
+        
+        ### Question B2 ----
+        if (input$qB2 == playerBank()[5, "Type"]) {
+          output$ansB2 <- renderIcon("correct")
+          output$feedbackB2 <- renderUI({"Congrats!"})
+          if (playerScores$bAttempts <= 1) {
+            playerScores$intLevelB <- playerScores$intLevelB + 1
+          } else {
+            playerScores$finalLevelB <- playerScores$finalLevelB + 1
+          }
+        } else {
+          output$ansB2 <- renderIcon("incorrect")
+        }
+        if (playerScores$bAttempts >= 2) {
+          output$feedbackB2 <- renderUI({playerBank()[5, "Feedback"]})
+        }
+        
+        ### Question B3 ----
+        if (input$qB3 == playerBank()[6, "Type"]) {
+          output$ansB3 <- renderIcon("correct")
+          output$feedbackB3 <- renderUI({"Congrats!"})
+          if (playerScores$bAttempts <= 1) {
+            playerScores$intLevelB <- playerScores$intLevelB + 1
+          } else {
+            playerScores$finalLevelB <- playerScores$finalLevelB + 1
+          }
+        } else {
+          output$ansB3 <- renderIcon("incorrect")
+        }
+        if (playerScores$bAttempts >= 2) {
+          output$feedbackB3 <- renderUI({playerBank()[6, "Feedback"]})
+        }
+        
+        if (playerScores$intLevelB == 3) {playerScores$finalLevelB <- 3}
+        ### Alter Buttons ----
+        if (playerScores$finalLevelB == 3 | playerScores$bAttempts >= 2) {
+          updateButton(
+            session = session,
+            inputId = "nextB",
+            disabled = FALSE
+          )
+          updateButton(
+            session = session,
+            inputId = "submitB",
+            disabled = TRUE
+          )
+        }
+      }
+    }
+  )
+  
+  ### Move to Level C ----
+  observeEvent(
+    eventExpr = input$nextB,
+    handlerExpr = {
       updateTabsetPanel(
         session = session,
         inputId = "gameLevels",
-        selected = "Level C")
-    } else {
-      sendSweetAlert(
-        session = session,
-        title = "Try Again",
-        text = "You need to achieve the max score before moving on.",
-        type = "warning"
+        selected = "Level C"
       )
     }
-  })
-
-  observeEvent(input$nextC, {
-    if(scoreLevelC() == 8) {
+  )
+  
+  ## Scoring Level C ----
+  observeEvent(
+    eventExpr = input$submitC,
+    handlerExpr = {
+      ### Alert for Non-Answers ----
+      if (any(input$qC1 == "Select Answer", input$qC2 == "Select Answer",
+              input$qC3 == "Select Answer", input$qC4 == "Select Answer")) {
+        sendSweetAlert(
+          session = session,
+          title = "Answer Questions",
+          text = "Try identifying the type of bias for all survey questions.",
+          type = "warning"
+        )
+      } else {
+        ### Iterate Attempts ----
+        playerScores$cAttempts <- playerScores$cAttempts + 1
+        
+        ### Question C1 ----
+        if (input$qC1 == playerBank()[7, "Type"]) {
+          output$ansC1 <- renderIcon("correct")
+          output$feedbackC1 <- renderUI({"Congrats!"})
+          if (playerScores$cAttempts <= 1) {
+            playerScores$intLevelC <- playerScores$intLevelC + 1
+          } else {
+            playerScores$finalLevelC <- playerScores$finalLevelC + 1
+          }
+        } else {
+          output$ansC1 <- renderIcon("incorrect")
+        }
+        if (playerScores$cAttempts >= 2) {
+          output$feedbackC1 <- renderUI({playerBank()[7, "Feedback"]})
+        }
+        
+        ### Question C2 ----
+        if (input$qC2 == playerBank()[8, "Type"]) {
+          output$ansC2 <- renderIcon("correct")
+          output$feedbackC2 <- renderUI({"Congrats!"})
+          if (playerScores$cAttempts <= 1) {
+            playerScores$intLevelC <- playerScores$intLevelC + 1
+          } else {
+            playerScores$finalLevelC <- playerScores$finalLevelC + 1
+          }
+        } else {
+          output$ansC2 <- renderIcon("incorrect")
+        }
+        if (playerScores$cAttempts >= 2) {
+          output$feedbackC2 <- renderUI({playerBank()[8, "Feedback"]})
+        }
+        
+        ### Question C3 ----
+        if (input$qC3 == playerBank()[9, "Type"]) {
+          output$ansC3 <- renderIcon("correct")
+          output$feedbackC3 <- renderUI({"Congrats!"})
+          if (playerScores$cAttempts <= 1) {
+            playerScores$intLevelC <- playerScores$intLevelC + 1
+          } else {
+            playerScores$finalLevelC <- playerScores$finalLevelC + 1
+          }
+        } else {
+          output$ansC3 <- renderIcon("incorrect")
+        }
+        if (playerScores$cAttempts >= 2) {
+          output$feedbackC3 <- renderUI({playerBank()[9, "Feedback"]})
+        }
+        
+        ### Question C4 ----
+        if (input$qC4 == playerBank()[10, "Type"]) {
+          output$ansC4 <- renderIcon("correct")
+          output$feedbackC4 <- renderUI({"Congrats!"})
+          if (playerScores$cAttempts <= 1) {
+            playerScores$intLevelC <- playerScores$intLevelC + 1
+          } else {
+            playerScores$finalLevelC <- playerScores$finalLevelC + 1
+          }
+        } else {
+          output$ansC4 <- renderIcon("incorrect")
+        }
+        if (playerScores$cAttempts >= 2) {
+          output$feedbackC4 <- renderUI({playerBank()[10, "Feedback"]})
+        }
+        
+        if (playerScores$intLevelC == 4) {playerScores$finalLevelC <- 4}
+        ### Alter Buttons ----
+        if (playerScores$finalLevelC == 4 | playerScores$cAttempts >= 2) {
+          updateButton(
+            session = session,
+            inputId = "nextC",
+            disabled = FALSE
+          )
+          updateButton(
+            session = session,
+            inputId = "submitC",
+            disabled = TRUE
+          )
+        }
+      }
+    }
+  )
+  
+  ### Move to Final Tab ----
+  observeEvent(
+    eventExpr = input$nextC,
+    handlerExpr = {
       updateTabsetPanel(
         session = session,
         inputId = "gameLevels",
         selected = "Final Scores"
       )
-    } else {
-      sendSweetAlert(
-        session = session,
-        title = "Try Again",
-        text = "You need to achieve the max score before moving on.",
-        type = "warning"
-      )
     }
-  })
-
-  observeEvent(input$prevA, {
-    updateTabsetPanel(
-      session = session,
-      inputId = "gameLevels",
-      selected = "Directions")
-  })
-
-  observeEvent(input$prevB, {
-    updateTabsetPanel(
-      session = session,
-      inputId = "gameLevels",
-      selected = "Level A")
-  })
-
-  observeEvent(input$prevC, {
-    updateTabsetPanel(
-      session = session,
-      inputId = "gameLevels",
-      selected = "Level B")
-  })
-
-  ## Game Server Logic ----
-
-  ### Level A Scoring/Submit Button ----
-  observeEvent(input$submitA, {
-    #### Stop Timer ----
-    time$started <- FALSE
-    #### QA1 ----
-    if (!is.null(input$qA1)) {
-      correct <- input$qA1 == questionBank[1, "Type"]
-
-      if (correct) {
-        scoreLevelA(scoreLevelA() + 2)
-        output$ansA1 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelA(scoreLevelA() - 2)
-        output$ansA1 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qA1",
-        description = questionBank[1, 3],
-        interactionType = "choice",
-        response = input$qA1,
-        success = correct
+  )
+  
+  ## Final Score Page ----
+  output$finalScores <- DT::renderDataTable(
+    expr = {
+      data.frame(
+        level = c("Level A", "Level B", "Level C"),
+        initial = c(playerScores$intLevelA, playerScores$intLevelB,
+                    playerScores$intLevelC),
+        final = c(playerScores$finalLevelA, playerScores$finalLevelB,
+                  playerScores$finalLevelC),
+        attempts = c(playerScores$aAttempts, playerScores$bAttempts,
+                     playerScores$cAttempts)
       )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### QA2 ----
-    if (!is.null(input$qA2)) {
-      correct <- input$qA2 == questionBank[2, "Type"]
-
-      if (correct) {
-        scoreLevelA(scoreLevelA() + 2)
-        output$ansA2 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelA(scoreLevelA() - 2)
-        output$ansA2 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qA2",
-        description = questionBank[2, 3],
-        interactionType = "choice",
-        response = input$qA2,
-        success = correct
-      )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### QA3 ----
-    if (!is.null(input$qA3)) {
-      correct <- input$qA3 == questionBank[3, "Type"]
-
-      if (correct) {
-        scoreLevelA(scoreLevelA() + 2)
-        output$ansA3 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelA(scoreLevelA() - 2)
-        output$ansA3 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qA3",
-        description = questionBank[3, 3],
-        interactionType = "choice",
-        response = input$qA3,
-        success = correct
-      )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### Disable Submit Button ----
-    updateButton(
-      session = session,
-      inputId = "submitA",
-      disabled = TRUE
+    },
+    caption = "Your Scores",
+    rownames = FALSE,
+    colnames = c("Level", "Initial Scores", "Final Scores", "Attempts"),
+    options = list(
+      responsive = TRUE,
+      ordering = FALSE,
+      paging = FALSE,
+      lengthChange = FALSE,
+      searching = FALSE,
+      info = FALSE
     )
-    #### Enable Next button ----
-    if(!is.null(scoreLevelA()) ){
-      updateButton(
+  )
+  
+  ## Previous Level Buttons ----
+  observeEvent(
+    eventExpr = input$prevA, 
+    handlerExpr = {
+      updateTabsetPanel(
         session = session,
-        inputId = "nextA",
-        disabled = FALSE
+        inputId = "gameLevels",
+        selected = "Directions"
       )
     }
+  )
 
-    #### Enable Reattempt Button ----
-    if(scoreLevelA() < 6){
-      updateButton(
+  observeEvent(
+    eventExpr = input$prevB, 
+    handlerExpr = {
+      updateTabsetPanel(
         session = session,
-        inputId = "reattemptA",
-        disabled = FALSE
+        inputId = "gameLevels",
+        selected = "Level A"
       )
     }
-  })
+  )
 
-  ### Level B Scoring/Submit Button ----
-  observeEvent(input$submitB, {
-    #### Stop Timer ----
-    time$started <- FALSE
-    #### QB1 ----
-    if (!is.null(input$qB1)) {
-      correct <- input$qB1 == questionBank[4, "Type"]
-
-      if (correct) {
-        scoreLevelB(scoreLevelB() + 2)
-        output$ansB1 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelB(scoreLevelB() - 2)
-        output$ansB1 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qB1",
-        description = questionBank[4, 3],
-        interactionType = "choice",
-        response = input$qB1,
-        success = correct
-      )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### QB2 ----
-    if (!is.null(input$qB2)) {
-      correct <- input$qB2 == questionBank[5, "Type"]
-
-      if (correct) {
-        scoreLevelB(scoreLevelB() + 2)
-        output$ansB2 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelB(scoreLevelB() - 2)
-        output$ansB2 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qB2",
-        description = questionBank[5, 3],
-        interactionType = "choice",
-        response = input$qB2,
-        success = correct
-      )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### QB3 ----
-    if (!is.null(input$qB3)) {
-      correct <- input$qB3 == questionBank[6, "Type"]
-
-      if (correct) {
-        scoreLevelB(scoreLevelB() + 2)
-        output$ansB3 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelB(scoreLevelB() - 2)
-        output$ansB3 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qB3",
-        description = questionBank[6, 3],
-        interactionType = "choice",
-        response = input$qB3,
-        success = correct
-      )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### Disable Submit Button ----
-    updateButton(
-      session = session,
-      inputId = "submitB",
-      disabled = TRUE
-    )
-    #### Enable Next button ----
-    if(!is.null(scoreLevelB()) ){
-      updateButton(
+  observeEvent(
+    eventExpr = input$prevC, 
+    handlerExpr = {
+      updateTabsetPanel(
         session = session,
-        inputId = "nextB",
-        disabled = FALSE
+        inputId = "gameLevels",
+        selected = "Level B"
       )
     }
-
-    #### Enable Reattempt Button ----
-    if(scoreLevelB() < 6){
-      updateButton(
+  )
+  
+  observeEvent(
+    eventExpr = input$prevScores,
+    handlerExpr = {
+      updateTabsetPanel(
         session = session,
-        inputId = "reattemptB",
-        disabled = FALSE
+        inputId = "gameLevels",
+        selected = "Level C"
       )
     }
-  })
-
-  ### Level C Scoring/Submit Button ----
-  observeEvent(input$submitC, {
-    #### Stop Timer ----
-    time$started <- FALSE
-    #### QC1 ----
-    if (!is.null(input$qC1)) {
-      correct <- input$qC1 == questionBank[7, "Type"]
-
-      if (correct) {
-        scoreLevelC(scoreLevelC() + 2)
-        output$ansC1 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelC(scoreLevelC() - 2)
-        output$ansC1 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qC1",
-        description = questionBank[7, 3],
-        interactionType = "choice",
-        response = input$qC1,
-        success = correct
-      )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### QC2 ----
-    if (!is.null(input$qC2)) {
-      correct <- input$qC2 == questionBank[8, "Type"]
-
-      if (correct) {
-        scoreLevelC(scoreLevelC() + 2)
-        output$ansC2 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelC(scoreLevelC() - 2)
-        output$ansC2 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qC2",
-        description = questionBank[8, 3],
-        interactionType = "choice",
-        response = input$qC2,
-        success = correct
-      )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### QC3 ----
-    if (!is.null(input$qC3)) {
-      correct <- input$qC3 == questionBank[9, "Type"]
-
-      if (correct) {
-        scoreLevelC(scoreLevelC() + 2)
-        output$ansC3 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelC(scoreLevelC() - 2)
-        output$ansC3 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qC3",
-        description = questionBank[9, 3],
-        interactionType = "choice",
-        response = input$qC3,
-        success = correct
-      )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### QC4 ----
-    if (!is.null(input$qC4)) {
-      correct <- input$qC4 == questionBank[10, "Type"]
-
-      if (correct) {
-        scoreLevelC(scoreLevelC() + 2)
-        output$ansC4 <- boastUtils::renderIcon(icon = "correct", width = 52)
-      } else {
-        scoreLevelC(scoreLevelC() - 2)
-        output$ansC4 <- boastUtils::renderIcon(icon = "incorrect", width = 52)
-      }
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "answered",
-        object = "qC4",
-        description = questionBank[10, 3],
-        interactionType = "choice",
-        response = input$qC4,
-        success = correct
-      )
-
-      boastUtils::storeStatement(session, stmt)
-    }
-    #### Disable Submit Button ----
-    updateButton(
-      session = session,
-      inputId = "submitC",
-      disabled = TRUE
-    )
-    #### Enable Next button ----
-    if(!is.null(scoreLevelC()) ){
-      updateButton(
+  )
+  
+  ## Start a New Game ----
+  observeEvent(
+    eventExpr = input$newGame,
+    handlerExpr = {
+      updateTabsetPanel(
         session = session,
-        inputId = "nextC",
-        disabled = FALSE
+        inputId = "gameLevels",
+        selected = "Directions"
       )
-
-      stmt <- boastUtils::generateStatement(
-        session,
-        verb = "completed",
-        object = "submitC",
-        description = "Survey Bias Game",
-        response = paste0(
-          "Scores: [",
-          scoreLevelA(), ", ",
-          scoreLevelB(), ", ",
-          scoreLevelC(), ", ",
-          "] = ",
-          scoreLevelA() + scoreLevelB() + scoreLevelC()
-        )
+      playerScores$intLevelA <- 0
+      playerScores$intLevelB <- 0
+      playerScores$intLevelC <- 0
+      playerScores$finalLevelA <- 0
+      playerScores$finalLevelB <- 0
+      playerScores$finalLevelC <- 0
+      playerScores$aAttempts <- 0
+      playerScores$bAttempts <- 0
+      playerScores$cAttempts <- 0
+      
+      playerBank(NULL)
+      
+      lapply(
+        X = c("qA1", "qA2", "qA3", "qB1", "qB2", "qB3", "qC1", "qC2", "qC3", "qC4"),
+        FUN = function(x) {
+          updateSelectInput(
+            session = session,
+            inputId = x,
+            selected = "Select Answer"
+          )
+        }
       )
-
-      boastUtils::storeStatement(session, stmt)
+      
+      output$ansA1 <- renderIcon()
+      output$feedbackA1 <- renderUI({NULL})
+      output$ansA2 <- renderIcon()
+      output$feedbackA2 <- renderUI({NULL})
+      output$ansA3 <- renderIcon()
+      output$feedbackA3 <- renderUI({NULL})
+      output$ansB1 <- renderIcon()
+      output$feedbackB1 <- renderUI({NULL})
+      output$ansB2 <- renderIcon()
+      output$feedbackB2 <- renderUI({NULL})
+      output$ansB3 <- renderIcon()
+      output$feedbackB3 <- renderUI({NULL})
+      output$ansC1 <- renderIcon()
+      output$feedbackC1 <- renderUI({NULL})
+      output$ansC2 <- renderIcon()
+      output$feedbackC2 <- renderUI({NULL})
+      output$ansC3 <- renderIcon()
+      output$feedbackC3 <- renderUI({NULL})
+      output$ansC4 <- renderIcon()
+      output$feedbackC4 <- renderUI({NULL})
     }
-    #### Enable Reattempt Button ----
-    if(scoreLevelC() < 8){
-      updateButton(
-        session = session,
-        inputId = "reattemptC",
-        disabled = FALSE
-      )
-    }
-  })
+  )
 
-  ## Reattempt Buttons ----
-  observeEvent(input$reattemptA, {
-    output$ansA1 <- renderIcon()
-    output$ansA2 <- renderIcon()
-    output$ansA3 <- renderIcon()
-    scoreLevelA(0)
-    time$started <- TRUE
-    updateButton(
-      session = session,
-      inputId = "submitA",
-      disabled = FALSE
-    )
-  })
-
-  observeEvent(input$reattemptB, {
-    output$ansB1 <- renderIcon()
-    output$ansB2 <- renderIcon()
-    output$ansB3 <- renderIcon()
-    scoreLevelB(0)
-    time$started <- TRUE
-    updateButton(
-      session = session,
-      inputId = "submitB",
-      disabled = FALSE
-    )
-  })
-
-  observeEvent(input$reattemptC, {
-    output$ansC1 <- renderIcon()
-    output$ansC2 <- renderIcon()
-    output$ansC3 <- renderIcon()
-    output$ansC4 <- renderIcon()
-    scoreLevelC(0)
-    time$started <- TRUE
-    updateButton(
-      session = session,
-      inputId = "submitC",
-      disabled = FALSE
-    )
-  })
-
-  # Generate Questions for Display ----
-
-  observeEvent(input$go2, {
-    tempBankA <- bank %>%
-      filter(Type %in% c("filtering", "deliberate bias", "anchoring")) %>%
-      slice_sample(n = 3)
-
-    tempBankB <- bank %>%
-      filter(Type %in% c("unnecessary complexity", "unbiased", "unintentional")) %>%
-      slice_sample(n = 3)
-
-    tempBankC <- bank %>%
-      filter(Type %in% c("filtering", "unnecessary complexity", "unbiased", "unintentional")) %>%
-      filter(!(Var %in% c(tempBankA$Var, tempBankB$Var))) %>%
-      slice_sample(n = 4)
-
-    questionBank <<- rbind(tempBankA, tempBankB, tempBankC)
-
-    ## Render Question Text ----
-    output$questionA1 <- renderText({
-      questionBank[1, "Survey.Question"]
-    })
-    output$questionA2 <- renderText({
-      questionBank[2, "Survey.Question"]
-    })
-    output$questionA3 <- renderText({
-      questionBank[3, "Survey.Question"]
-    })
-
-    output$questionB1 <- renderText({
-      questionBank[4, "Survey.Question"]
-    })
-    output$questionB2 <- renderText({
-      questionBank[5, "Survey.Question"]
-    })
-    output$questionB3 <- renderText({
-      questionBank[6, "Survey.Question"]
-    })
-
-    output$questionC1 <- renderText({
-      questionBank[7, "Survey.Question"]
-    })
-    output$questionC2 <- renderText({
-      questionBank[8, "Survey.Question"]
-    })
-    output$questionC3 <- renderText({
-      questionBank[9, "Survey.Question"]
-    })
-    output$questionC4 <- renderText({
-      questionBank[10, "Survey.Question"]
-    })
-  })
-
-  ## Score Outputs ----
-  output$scoreA <- renderText({
-    paste("Your score is", scoreLevelA(), ".")
-  })
-
-  output$finalAScore <- renderText({
-    paste("Your score for Level A:", scoreLevelA())
-  })
-
-  output$scoreB <- renderText({
-    paste("Your score is", scoreLevelB(), ".")
-  })
-
-  output$finalBScore <- renderText({
-    paste("Your score for Level B:", scoreLevelB())
-  })
-
-  output$scoreC <- renderPrint({
-    cat("Your score is", scoreLevelC(), ".")
-  })
-
-  output$finalCScore <- renderText({
-    paste("Your score for Level C:", scoreLevelC())
-  })
-
-  output$totalScore <- renderText({
-    paste("Your total score is", scoreLevelA() + scoreLevelB() + scoreLevelC(), ".")
-  })
-
-  ## Old scape code? ----
-  # observeEvent(input$runif2, {
-  #   output$myImage <- renderImage({
-  #     output$myImage <- renderImage(
-  #       {
-  #         image_file <- paste("www/", input$image.type, ".png", sep = "")
-  #         return(list(
-  #           src = image_file,
-  #           filetype = "importanceoforder.png",
-  #           height = 250,
-  #           width = 500
-  #         ))
-  #       },
-  #       deleteFile = FALSE
-  #     )
-  #   })
-  # })
 }
 
 # Create Shiny App using BOAST App template
