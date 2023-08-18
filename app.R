@@ -41,7 +41,6 @@ ui <- list(
         id = "pages",
         width = 250,
         menuItem("Overview", tabName = "overview", icon = icon("gauge-high")),
-        menuItem("Prequisites???", tabName = "prereqs", icon = icon("book")),
         menuItem("Examples", tabName = "examples", icon = icon("book-open-reader")),
         menuItem("Game", tabName = "game", icon = icon("gamepad")),
         menuItem("References", tabName = "References", icon = icon("leanpub"))
@@ -68,12 +67,7 @@ ui <- list(
             tags$li("On the first page, simply click below each question that
                     contains a bias to see what that bias is."),
             tags$li("Pay attention! Because on the second page, you will be
-                    asked to match questions with their appropriate bias."),
-            tags$li("Note: you will be timed.  Each round will continue to
-                    increase in difficulty."),
-            tags$li("For the game portion, please note that some of the biases
-                    overlap.  So while one may seem fitting, it could be marked
-                    incorrect if there is a more dominant bias.")
+                    asked to match questions with their appropriate bias.")
           ),
           div(
             style = "text-align: center;",
@@ -401,9 +395,7 @@ ui <- list(
               h3("Directions"),
               p("There are three levels to this game. In each level, you'll need
                 to review proposed survey questions for wording biases (if any).
-                As the game progresses, some questions could contain multiple biases;
-                in these cases you'll want to select the most prevelant/impactful
-                bias. You'll have two attempts for each survey question."),
+                You'll have two attempts for each survey question."),
               p("Click the Start button when you're ready to begin."),
               div(
                 style = "text-align: center;",

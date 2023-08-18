@@ -1,9 +1,9 @@
 Type,qID,Survey Question,Feedback
-important,q1,"Pick your favorite fruit: apples, bananas, strawberries ",No option for other types of fruit
-important,q2,"What freedom is most important: freedom of religion, freedom of speech, freedom of the press ",No option for other freedoms or equal importance
-important,q3,Which of the following sports requires the most practice: soccer or baseball?,No option for no opinion of for equality of practice time or no opinion
-important,q4,"Pick the best social media from the following: Instagram, Twitter, Facebook, MySpace",No option for other types of social media or no opinion
-important,q5,"Who is the best basketball player: Wilt Chamberlain, Michael Jordan, Lebron James?",No option for other players or no opinion
+filtering,q1,"Pick your favorite fruit: apples, bananas, strawberries ",No option for other types of fruit
+filtering,q2,"What freedom is most important: freedom of religion, freedom of speech, freedom of the press ",No option for other freedoms or equal importance
+filtering,q3,Which of the following sports requires the most practice: soccer or baseball?,No option for no opinion of for equality of practice time or no opinion
+filtering,q4,"Pick the best social media from the following: Instagram, Twitter, Facebook, MySpace",No option for other types of social media or no opinion
+filtering,q5,"Who is the best basketball player: Wilt Chamberlain, Michael Jordan, Lebron James?",No option for other players or no opinion
 filtering,q6,What is your opinion of the movie Inception? A. Favorable B. Unfavorable,No option for no opinion or mixed feeling
 filtering,q7,What is your opinion of the new health care law? A. Support B. Do not support,No option for no opinion or mixed feeling
 filtering,q8,How do you feel about the current 21 year-old drinking age? A. In favor B. Not in favor,No option for no opinion or mixed feeling
