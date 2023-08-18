@@ -1,12 +1,8 @@
 # Things Needed for This Version
-1. Do we need a prereq's page? (issue #11) In progress
-2. DRY code (issue #2)
-3. Fix Game options to differentiate double barrelled and double negatives (issue #7)
-4. Check all aspects of app (issue #4) In Progress
-5. Fix name issue (issue #5)
+
 
 # Ideas for Future Development
+- Do we need to rename the app?
+- How can we better DRY the code?
 - Add progress bar for game?
-- Other types of feedback for user, e.g., most missed biased (issue #9)
-- Add page aware info button
 - Decide what to do with the importance of order graphic (extra file)
